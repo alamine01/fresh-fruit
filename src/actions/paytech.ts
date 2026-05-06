@@ -1,6 +1,6 @@
 "use server";
 
-export async function createPayTechPayment(orderData: any) {
+export async function createPayTechPayment(orderData: any, paymentMethod: string) {
     const API_KEY = process.env.PAYTECH_API_KEY || "test_key";
     const API_SECRET = process.env.PAYTECH_API_SECRET || "test_secret";
 
@@ -20,10 +20,11 @@ export async function createPayTechPayment(orderData: any) {
                 currency: "XOF",
                 ref_command: orderData.orderId,
                 command_name: "Paiement de la commande #" + orderData.orderId,
-                env: "prod", // Changement de 'live' à 'prod' comme dans le projet Airbnb
+                env: "prod",
+                target_payment: paymentMethod === 'wave' ? 'Wave' : (paymentMethod === 'om' ? 'Orange Money' : null),
                 success_url: orderData.origin + "/checkout/success",
                 cancel_url: orderData.origin + "/checkout/cancel",
-                ipn_url: orderData.origin + "/api/webhooks/paytech", // Ajout de l'IPN URL
+                ipn_url: orderData.origin + "/api/webhooks/paytech",
                 custom_field: JSON.stringify(orderData.customer)
             })
         });
@@ -32,7 +33,22 @@ export async function createPayTechPayment(orderData: any) {
         console.log("PayTech Response:", result);
 
         if (result.success === 1) {
-            return { success: true, redirect_url: result.redirect_url };
+            let redirectUrl = result.redirect_url;
+            
+            // Paramètres pour sauter la sélection et pré-remplir (méthode du projet Airbnb)
+            const cleanPhone = orderData.customer.phone.replace(/\s+/g, '').replace(/\+/g, '');
+            const phoneWithPrefix = cleanPhone.startsWith('221') ? `+${cleanPhone}` : `+221${cleanPhone}`;
+            const phoneNoPrefix = cleanPhone.startsWith('221') ? cleanPhone.substring(3) : cleanPhone;
+
+            const params = new URLSearchParams({
+                'tp': paymentMethod === 'wave' ? 'Wave' : 'Orange Money',
+                'nac': '1',
+                'fn': `${orderData.customer.firstName} ${orderData.customer.lastName}`,
+                'pn': phoneWithPrefix,
+                'nn': phoneNoPrefix
+            });
+
+            return { success: true, redirect_url: `${redirectUrl}?${params.toString()}` };
         } else {
             // Extraire les messages d'erreur s'ils existent
             const errorMsg = result.errors && result.errors.length > 0 

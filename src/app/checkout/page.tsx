@@ -52,7 +52,7 @@ export default function CheckoutPage() {
                     orderId: orderId,
                     customer: formData,
                     origin: window.location.origin
-                });
+                }, paymentMethod);
                 
                 if (result.success && result.redirect_url) {
                     window.location.href = result.redirect_url;
