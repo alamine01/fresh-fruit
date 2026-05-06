@@ -33,22 +33,19 @@ export async function createPayTechPayment(orderData: any, paymentMethod: string
         console.log("PayTech Response:", result);
 
         if (result.success === 1) {
-            let redirectUrl = result.redirect_url;
+            const redirectUrl = result.redirect_url;
             
-            // Paramètres pour sauter la sélection et pré-remplir (méthode du projet Airbnb)
-            const cleanPhone = orderData.customer.phone.replace(/\s+/g, '').replace(/\+/g, '');
-            const phoneWithPrefix = cleanPhone.startsWith('221') ? `+${cleanPhone}` : `+221${cleanPhone}`;
-            const phoneNoPrefix = cleanPhone.startsWith('221') ? cleanPhone.substring(3) : cleanPhone;
+            // Préparation des paramètres de pré-remplissage
+            const phone = (orderData.customer.phone || "").replace(/\s+/g, '').replace(/\+/g, '');
+            const phoneWithPrefix = phone.startsWith('221') ? `+${phone}` : `+221${phone}`;
+            const phoneNoPrefix = phone.startsWith('221') ? phone.substring(3) : phone;
+            const fullName = `${orderData.customer.firstName || ""} ${orderData.customer.lastName || ""}`.trim();
+            const tp = paymentMethod === 'wave' ? 'Wave' : 'Orange Money';
 
-            const params = new URLSearchParams({
-                'tp': paymentMethod === 'wave' ? 'Wave' : 'Orange Money',
-                'nac': '1',
-                'fn': `${orderData.customer.firstName} ${orderData.customer.lastName}`,
-                'pn': phoneWithPrefix,
-                'nn': phoneNoPrefix
-            });
+            // Construction manuelle pour éviter tout souci de compatibilité
+            const finalUrl = `${redirectUrl}?tp=${encodeURIComponent(tp)}&nac=1&fn=${encodeURIComponent(fullName)}&pn=${encodeURIComponent(phoneWithPrefix)}&nn=${encodeURIComponent(phoneNoPrefix)}`;
 
-            return { success: true, redirect_url: `${redirectUrl}?${params.toString()}` };
+            return { success: true, redirect_url: finalUrl };
         } else {
             // Extraire les messages d'erreur s'ils existent
             const errorMsg = result.errors && result.errors.length > 0 
