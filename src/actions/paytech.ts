@@ -40,7 +40,7 @@ export async function createPayTechPayment(orderData: any) {
             // Extraire les messages d'erreur s'ils existent
             const errorMsg = result.errors && result.errors.length > 0 
                 ? result.errors.join(", ") 
-                : "Erreur de configuration ou clé invalide";
+                : `Erreur de configuration (La clé commence par: ${API_KEY.substring(0, 4)}...)`;
             return { success: false, message: errorMsg };
         }
     } catch (error) {
