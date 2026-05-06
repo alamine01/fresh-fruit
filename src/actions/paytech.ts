@@ -10,12 +10,15 @@ export async function createPayTechPayment(orderData: any) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "application/json",
                 "API_KEY": API_KEY,
-                "API_SECRET": API_SECRET
+                "API_SECRET": API_SECRET,
+                "api_key": API_KEY, // Doublon en minuscule au cas où
+                "api_secret": API_SECRET
             },
             body: JSON.stringify({
                 item_name: "Commande Fresh Fruit",
-                item_price: Math.round(orderData.total),
+                item_price: Math.round(orderData.total).toString(),
                 currency: "XOF",
                 ref_command: orderData.orderId,
                 command_name: "Paiement de la commande #" + orderData.orderId,
