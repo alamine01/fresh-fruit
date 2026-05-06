@@ -25,7 +25,9 @@ export async function createPayTechPayment(orderData: any) {
                 env: "live",
                 success_url: orderData.origin + "/checkout/success",
                 cancel_url: orderData.origin + "/checkout/cancel",
-                custom_field: JSON.stringify(orderData.customer)
+                custom_field: JSON.stringify(orderData.customer),
+                api_key: API_KEY, // Ajout dans le corps pour certaines versions de l'API
+                api_secret: API_SECRET
             })
         });
 
