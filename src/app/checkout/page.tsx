@@ -74,7 +74,7 @@ export default function CheckoutPage() {
                 }
             }
         } catch (error: any) {
-            alert("Erreur technique : " + (error.message || "Inconnue"));
+            alert("Une erreur est survenue lors de l'initialisation de la commande.");
         } finally {
             setLoading(false);
         }

@@ -47,11 +47,7 @@ export async function createPayTechPayment(orderData: any, paymentMethod: string
 
             return { success: true, redirect_url: finalUrl };
         } else {
-            // Extraire les messages d'erreur s'ils existent
-            const errorMsg = result.errors && result.errors.length > 0 
-                ? result.errors.join(", ") 
-                : `Erreur de configuration (La clé commence par: ${API_KEY.substring(0, 4)}...)`;
-            return { success: false, message: errorMsg };
+            return { success: false, message: result.errors?.[0] || "Erreur de configuration PayTech" };
         }
     } catch (error) {
         console.error("Erreur PayTech:", error);
