@@ -73,8 +73,8 @@ export default function CheckoutPage() {
                     router.push("/checkout/success?order_id=" + result.orderId);
                 }
             }
-        } catch (error) {
-            alert("Une erreur est survenue lors de l'initialisation de la commande.");
+        } catch (error: any) {
+            alert("Erreur technique : " + (error.message || "Inconnue"));
         } finally {
             setLoading(false);
         }
