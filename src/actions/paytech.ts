@@ -12,22 +12,19 @@ export async function createPayTechPayment(orderData: any) {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "API_KEY": API_KEY,
-                "API_SECRET": API_SECRET,
-                "api_key": API_KEY, // Doublon en minuscule au cas où
-                "api_secret": API_SECRET
+                "API_SECRET": API_SECRET
             },
             body: JSON.stringify({
                 item_name: "Commande Fresh Fruit",
-                item_price: Math.round(orderData.total).toString(),
+                item_price: Math.round(orderData.total),
                 currency: "XOF",
                 ref_command: orderData.orderId,
                 command_name: "Paiement de la commande #" + orderData.orderId,
-                env: "live",
+                env: "prod", // Changement de 'live' à 'prod' comme dans le projet Airbnb
                 success_url: orderData.origin + "/checkout/success",
                 cancel_url: orderData.origin + "/checkout/cancel",
-                custom_field: JSON.stringify(orderData.customer),
-                api_key: API_KEY, // Ajout dans le corps pour certaines versions de l'API
-                api_secret: API_SECRET
+                ipn_url: orderData.origin + "/api/webhooks/paytech", // Ajout de l'IPN URL
+                custom_field: JSON.stringify(orderData.customer)
             })
         });
 
