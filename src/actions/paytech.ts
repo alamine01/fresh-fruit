@@ -15,7 +15,7 @@ export async function createPayTechPayment(orderData: any) {
             },
             body: JSON.stringify({
                 item_name: "Commande Fresh Fruit",
-                item_price: orderData.total,
+                item_price: Math.round(orderData.total),
                 currency: "XOF",
                 ref_command: orderData.orderId,
                 command_name: "Paiement de la commande #" + orderData.orderId,
@@ -32,7 +32,11 @@ export async function createPayTechPayment(orderData: any) {
         if (result.success === 1) {
             return { success: true, redirect_url: result.redirect_url };
         } else {
-            return { success: false, message: result.errors?.[0] || "Erreur PayTech" };
+            // Extraire les messages d'erreur s'ils existent
+            const errorMsg = result.errors && result.errors.length > 0 
+                ? result.errors.join(", ") 
+                : "Erreur de configuration ou clé invalide";
+            return { success: false, message: errorMsg };
         }
     } catch (error) {
         console.error("Erreur PayTech:", error);
