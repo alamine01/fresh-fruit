@@ -41,3 +41,11 @@ export async function createCheckoutSession(items: CartItem[]) {
         throw new Error(error.message);
     }
 }
+
+export async function createLocalOrder(orderData: any) {
+    // Dans une application réelle, on enregistrerait ici la commande dans Firebase
+    // Pour cet exemple, nous simulons la réussite
+    console.log("Nouvelle commande locale reçue:", orderData);
+    
+    return { success: true, orderId: "LOC-" + Math.random().toString(36).substr(2, 9) };
+}

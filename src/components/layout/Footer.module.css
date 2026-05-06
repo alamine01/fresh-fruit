@@ -24,12 +24,11 @@
     letter-spacing: -0.03em;
 }
 
-.maya {
-    color: var(--primary-red);
-}
-
-.boutique {
-    color: var(--foreground);
+.logoImg {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+    display: block;
 }
 
 .description {
@@ -153,6 +152,24 @@
 @media (max-width: 768px) {
     .footer {
         padding: 4rem 0 0;
+    }
+
+    .brand {
+        align-items: center;
+        text-align: center;
+    }
+
+    .social {
+        justify-content: center;
+    }
+
+    .contact {
+        align-items: center;
+        text-align: center;
+    }
+
+    .contactItem {
+        justify-content: center;
     }
 
     .footerContainer {

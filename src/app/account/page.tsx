@@ -105,7 +105,7 @@ export default function AccountPage() {
                                                 <tr key={order.id}>
                                                     <td className={styles.orderId} data-label="Commande">{order.id}</td>
                                                     <td className={styles.date} data-label="Date">{order.date}</td>
-                                                    <td className={styles.total} data-label="Total">{order.total} €</td>
+                                                    <td className={styles.total} data-label="Total">{order.total.toLocaleString()} CFA</td>
                                                     <td data-label="Statut">
                                                         <span
                                                             className={styles.statusBadge}
@@ -158,7 +158,7 @@ export default function AccountPage() {
                                     <div className={styles.detailCard}>
                                         <h3>Informations</h3>
                                         <p><strong>Date :</strong> {selectedOrder.date}</p>
-                                        <p><strong>Total :</strong> {selectedOrder.total} €</p>
+                                        <p><strong>Total :</strong> {selectedOrder.total.toLocaleString()} CFA</p>
                                         <p><strong>Paiement :</strong> Carte Bancaire (Stripe)</p>
                                     </div>
                                     <div className={styles.detailCard}>

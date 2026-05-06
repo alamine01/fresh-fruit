@@ -3,7 +3,7 @@
 import { useCart } from '@/context/CartContext';
 import styles from './CartDrawer.module.css';
 import Link from 'next/link';
-import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CartDrawer = () => {
@@ -63,7 +63,7 @@ const CartDrawer = () => {
                                                 </div>
                                                 <div className={styles.itemInfo}>
                                                     <h3>{item.name}</h3>
-                                                    <p className={styles.itemPrice}>{item.price.toFixed(2)} €</p>
+                                                    <p className={styles.itemPrice}>{item.price.toLocaleString()} CFA</p>
                                                     <div className={styles.quantityControls}>
                                                         <button
                                                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -91,15 +91,15 @@ const CartDrawer = () => {
                                         <div className={styles.summary}>
                                             <div className={styles.totalRow}>
                                                 <span>Sous-total</span>
-                                                <span>{totalPrice.toFixed(2)} €</span>
+                                                <span>{totalPrice.toLocaleString()} CFA</span>
                                             </div>
                                             <div className={styles.totalRow}>
                                                 <span>Livraison</span>
-                                                <span className={styles.free}>Offerte (Lyon)</span>
+                                                <span className={styles.free}>Offerte (Dakar)</span>
                                             </div>
                                             <div className={`${styles.totalRow} ${styles.grandTotal}`}>
                                                 <span>Total</span>
-                                                <span>{totalPrice.toFixed(2)} €</span>
+                                                <span>{totalPrice.toLocaleString()} CFA</span>
                                             </div>
                                         </div>
 
@@ -113,7 +113,7 @@ const CartDrawer = () => {
                                         </Link>
 
                                         <p className={styles.secureInfo}>
-                                            Sécurité garantie par Stripe
+                                            <Lock size={14} /> Paiement 100% sécurisé
                                         </p>
                                     </div>
                                 </div>

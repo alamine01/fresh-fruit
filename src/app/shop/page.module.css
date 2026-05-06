@@ -37,13 +37,30 @@
 }
 
 .filterTitle {
-    font-size: 1.25rem;
-    font-weight: 700;
     margin-bottom: 1.5rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Aligne l'icône sur le haut (le texte "Prix maximum") */
     gap: 0.75rem;
     color: var(--foreground);
+}
+
+.filterTitleContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.filterLabel {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.filterValue {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--primary-orange);
+    white-space: nowrap; /* Empêche le retour à la ligne du montant */
 }
 
 .filterList {
@@ -246,6 +263,10 @@
 
     .title {
         font-size: 2.5rem;
+    }
+
+    .header {
+        margin-bottom: 10px;
     }
 
     .resultsBar {

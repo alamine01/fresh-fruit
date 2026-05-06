@@ -29,15 +29,13 @@ const Header = () => {
       <div className={`container ${styles.headerContainer}`}>
         <div className={styles.logo}>
           <Link href="/">
-            <span className={styles.maya}>Maya</span>
-            <span className={styles.boutique}>Boutique</span>
+            <img src="/logo.png" alt="Fresh Fruit Logo" className={styles.logoImg} />
           </Link>
         </div>
 
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
           <Link href="/" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>Accueil</Link>
           <Link href="/shop" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>Boutique</Link>
-          <Link href="/about" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>À propos</Link>
           <Link href="/contact" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>Contact</Link>
         </nav>
 
@@ -46,9 +44,6 @@ const Header = () => {
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
 
-          <button className={styles.actionBtn}>
-            <Search size={22} />
-          </button>
 
           <button className={styles.actionBtn} onClick={toggleCart}>
             <ShoppingBag size={22} />

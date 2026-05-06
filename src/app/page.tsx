@@ -3,37 +3,37 @@
 import Hero from "@/components/home/Hero";
 import styles from "./page.module.css";
 import Link from "next/link";
-import { Coffee, ShoppingBasket, Leaf, ArrowRight, Utensils, Heart } from "lucide-react";
+import { Apple, ShoppingBasket, Leaf, ArrowRight, CupSoda, Heart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 const categories = [
   {
     id: 1,
-    name: "Céréales & Mil",
-    Icon: Coffee,
-    description: "Araw de mil, préparations pour beignets et farines naturelles sans gluten riches en nutriments.",
-    color: "#CD853F"
+    name: "Fruits de Saison",
+    Icon: Apple,
+    description: "Des fruits frais, mûris au soleil et sélectionnés chaque matin pour leur saveur exceptionnelle.",
+    color: "#2E7D32"
   },
   {
     id: 2,
-    name: "Boissons & Jus",
-    Icon: Coffee,
-    description: "Bissap, Bouye (Baobab), jus de Gingembre frais et l'authentique Café Touba.",
-    color: "#8B0000"
+    name: "Jus Naturels",
+    Icon: CupSoda,
+    description: "Jus 100% pur fruit, sans sucre ajouté ni conservateurs. Pressés à froid pour garder toutes les vitamines.",
+    color: "#E65100"
   },
   {
     id: 3,
-    name: "Terroir & Épicerie",
+    name: "Paniers Mixtes",
     Icon: ShoppingBasket,
-    description: "Touffeu, feuilles de Nguer, dattes bio et produits authentiques du terroir sénégalais.",
-    color: "#DAA520"
+    description: "Des assortiments équilibrés pour toute la semaine. Idéal pour les familles et les bureaux.",
+    color: "#A2CF6E"
   },
   {
     id: 4,
-    name: "Infusions & Bien-être",
-    Icon: Utensils,
-    description: "Moringa, infusions de gingembre et fleurs d'hibiscus pour votre équilibre au quotidien.",
-    color: "#2E7D32"
+    name: "Exotiques & Rares",
+    Icon: Zap,
+    description: "Voyagez avec nos fruits exotiques : mangues, ananas, et fruits de la passion d'exception.",
+    color: "#FFD600"
   },
 ];
 
@@ -50,7 +50,7 @@ export default function Home() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h2 className={styles.sectionTitle}>Nos Univers Gastronomiques</h2>
+            <h2 className={styles.sectionTitle}>Nos Univers Fruités</h2>
           </motion.div>
 
           <div className={styles.grid}>
@@ -95,17 +95,17 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.8 }}
             >
               <div className={styles.label}>
-                <Heart size={14} fill="currentColor" /> Engagement Social
+                <Leaf size={14} fill="currentColor" /> Qualité & Fraîcheur
               </div>
-              <h3>Plus qu'une boutique, un pont entre Lyon et le Sénégal</h3>
+              <h3>De l'arbre à votre table, sans détour</h3>
               <p>
-                La majorité de nos produits (Bissap, thés, céréales) sont issus du travail passionné de <strong>mamans entrepreneures</strong> et de coopératives agricoles locales.
+                Chez Fresh Fruit, nous croyons que la qualité commence par le respect du cycle naturel. C'est pourquoi nous travaillons directement avec des producteurs passionnés.
               </p>
               <p>
-                En choisissant Maya Boutique, vous participez directement au développement d'une économie solidaire et durable, tout en savourant l'excellence du terroir sénégalais.
+                Chaque fruit est contrôlé individuellement pour vous garantir une expérience gustative parfaite et un apport nutritionnel optimal.
               </p>
-              <Link href="/about" className={styles.readMore}>
-                Découvrir notre mission <ArrowRight size={18} />
+              <Link href="/shop" className={styles.readMore}>
+                Découvrir nos produits <ArrowRight size={18} />
               </Link>
             </motion.div>
             <motion.div
@@ -115,7 +115,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <img src="https://images.unsplash.com/photo-1509358271058-acd22cc93898?auto=format&fit=crop&q=80&w=800" alt="Terroir Sénégalais" />
+              <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800" alt="Étal de fruits frais" />
             </motion.div>
           </motion.div>
         </div>
@@ -130,9 +130,9 @@ export default function Home() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h2>Une question ? Besoin d'un conseil ?</h2>
-            <p>Notre équipe à Lyon est là pour vous accompagner dans la découverte de nos trésors exotiques.</p>
-            <Link href="/contact" className="btn btn-secondary">
+            <h2>Besoin d'une livraison régulière ?</h2>
+            <p>Notre équipe est à votre disposition pour organiser vos livraisons de fruits frais à domicile ou au bureau.</p>
+            <Link href="/contact" className="btn btn-white">
               Contactez-nous
             </Link>
           </motion.div>

@@ -22,8 +22,9 @@ const Hero = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2, duration: 0.6 }}
                     >
-                        L'Épicerie Fine <br />
-                        <span className={styles.highlight}>Sénégalaise à Lyon</span>
+                        Fresh Fruit <br />
+                        Le meilleur de la <br className={styles.mobileBr} />
+                        <span className={styles.highlight}>nature</span>
                     </motion.h1>
                     <motion.p
                         className={styles.subtitle}
@@ -31,9 +32,9 @@ const Hero = () => {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4, duration: 0.6 }}
                     >
-                        De la Vallée du Fleuve Sénégal jusqu'à la Rue de Marseille.
-                        Céréales naturelles (Mil, Fonios), jus authentiques (Bissap, Bouye)
-                        et thés précieux sélectionnés avec amour auprès de nos coopératives.
+                        Découvrez une sélection rigoureuse de fruits de saison mûris à point 
+                        et des jus de fruits pressés 100% naturels. La fraîcheur et le goût 
+                        authentique pour votre bien-être au quotidien.
                     </motion.p>
                     <motion.div
                         className={styles.cta}
@@ -42,10 +43,7 @@ const Hero = () => {
                         transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
                     >
                         <Link href="/shop" className="btn btn-primary">
-                            Voir le catalogue <ArrowRight size={18} />
-                        </Link>
-                        <Link href="/about" className="btn btn-secondary">
-                            Notre histoire <Info size={18} />
+                            Commander maintenant <ArrowRight size={18} />
                         </Link>
                     </motion.div>
                 </motion.div>
@@ -58,19 +56,19 @@ const Hero = () => {
                 >
                     <div className={styles.mainImageWrapper}>
                         <img
-                            src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1000"
-                            alt="Boutique Maya"
+                            src="/hero-fruit.jpg"
+                            alt="Fruits Frais cueillis"
                             className={styles.actualImage}
                         />
                         <div className={styles.imageOverlay}></div>
                         <div className={styles.imageBadge}>
-                            <span>Authenticité & Tradition</span>
+                            <span>100% Naturel & Bio</span>
                         </div>
                     </div>
                     <div className={styles.secondaryImageWrapper}>
                         <img
-                            src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=500"
-                            alt="Produits Terroir"
+                            src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=600"
+                            alt="Jus de Fruit Frais"
                             className={styles.actualImage}
                         />
                     </div>

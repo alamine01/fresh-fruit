@@ -1,16 +1,15 @@
 .header {
     position: fixed;
-    top: 10px;
+    top: 0;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 100px;
     display: flex;
     align-items: center;
     z-index: 1000;
     transition: var(--transition-smooth);
     background: transparent;
     padding: 0;
-    flex-direction: column;
 }
 
 .announcementBar {
@@ -50,12 +49,17 @@
     gap: 0.2rem;
 }
 
-.maya {
-    color: var(--primary-red);
+.logoImg {
+    height: 180px;
+    width: auto;
+    object-fit: contain;
+    display: block;
 }
 
-.boutique {
-    color: var(--foreground);
+@media (max-width: 768px) {
+    .logoImg {
+        height: 100px;
+    }
 }
 
 .nav {

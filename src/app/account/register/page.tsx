@@ -67,7 +67,7 @@ export default function RegisterPage() {
                         <UserPlus size={32} />
                     </div>
                     <h1>Créer un compte</h1>
-                    <p>Rejoignez la communauté Maya Boutique et profitez d'un suivi personnalisé.</p>
+                    <p>Rejoignez la communauté Fresh Fruit et profitez d'un suivi personnalisé de vos commandes.</p>
                 </header>
 
                 <button

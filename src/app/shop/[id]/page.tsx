@@ -3,11 +3,18 @@ import styles from './ProductDetail.module.css';
 import Link from 'next/link';
 import { Truck, ShieldCheck } from 'lucide-react';
 
-// Mock Data (Reusing for now)
+// Données réelles Fresh Fruit - URLs d'images vérifiées
 const products: Product[] = [
-    { id: '1', name: 'Curcuma Bio du Sénégal', price: 8.50, category: 'Épicerie Fine', image: 'https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?auto=format&fit=crop&q=80&w=800', description: 'Curcuma pur récolté traditionnellement dans la région de Casamance. Connu pour ses propriétés anti-inflammatoires et son goût intense.' },
-    { id: '2', name: 'Boucles d\'oreilles Peulh Or', price: 45.00, category: 'Bijoux', image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800', description: 'Magnifiques boucles d\'oreilles traditionnelles portées par les femmes Peulh. Fabriquées à la main avec du bronze plaqué or.', featured: true },
-    { id: '3', name: 'Beurre de Karité Brut', price: 12.00, category: 'Bien-être', image: 'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&q=80&w=800', description: 'Beurre de karité 100% pur et naturel, sans additifs. Idéal pour nourrir la peau et les cheveux.' },
+    { id: '1', name: 'Pommes Gala (Kg)', price: 1500, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&q=80&w=600', description: 'Pommes croquantes et sucrées, idéales pour le goûter.' },
+    { id: '2', name: 'Bananes Bio (6 pièces)', price: 2000, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=600', description: 'Bananes biologiques issues du commerce équitable.' },
+    { id: '3', name: 'Mangue Kent d\'Exception', price: 1800, category: 'Exotiques', image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&q=80&w=600', description: 'Mangue charnue et sans fibres, mûrie à point.' },
+    { id: '4', name: 'Fraises de Saison (250g)', price: 3000, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1464965211926-1d820b7095a0?auto=format&fit=crop&q=80&w=600', description: 'Fraises locales ultra-fraîches et parfumées.' },
+    { id: '5', name: 'Jus d\'Orange Pressé (1L)', price: 3500, category: 'Jus Naturels', image: 'https://images.unsplash.com/photo-1600271886342-dc672e471b99?auto=format&fit=crop&q=80&w=600', description: '100% pur jus pressé chaque matin, sans additifs.' },
+    { id: '6', name: 'Panier Famille Hebdo', price: 20000, category: 'Paniers Mixtes', image: 'https://images.unsplash.com/photo-1610397648930-477b8c7f0943?auto=format&fit=crop&q=80&w=600', description: 'Un assortiment de 5kg de fruits de saison pour toute la famille.' },
+    { id: '7', name: 'Jus Pomme-Gingembre (250ml)', price: 2000, category: 'Jus Naturels', image: 'https://images.unsplash.com/photo-1544787210-2211d7c9282b?auto=format&fit=crop&q=80&w=600', description: 'Un cocktail énergisant pressé à froid.' },
+    { id: '8', name: 'Ananas Victoria (Pièce)', price: 3000, category: 'Exotiques', image: 'https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&q=80&w=600', description: 'Le plus petit et le plus sucré des ananas.' },
+    { id: '9', name: 'Panier Bureau Vitaminé', price: 15000, category: 'Paniers Mixtes', image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&q=80&w=600', description: 'Sélection de fruits faciles à déguster sur son lieu de travail.' },
+    { id: '10', name: 'Framboises Fraîches (125g)', price: 2500, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&q=80&w=600', description: 'Framboises cueillies à la main, un délice de finesse.' },
 ];
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
@@ -28,7 +35,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 <div className={styles.infoSection}>
                     <span className={styles.category}>{product.category}</span>
                     <h1 className={styles.name}>{product.name}</h1>
-                    <p className={styles.price}>{product.price.toFixed(2)} €</p>
+                    <p className={styles.price}>{product.price.toLocaleString()} CFA</p>
 
                     <div className={styles.description}>
                         <h3>Description</h3>
@@ -42,7 +49,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                             </div>
                             <div>
                                 <strong>Livraison Locale</strong>
-                                <p>Remise en main propre à Lyon</p>
+                                <p>Livraison rapide à Dakar</p>
                             </div>
                         </div>
                         <div className={styles.feature}>

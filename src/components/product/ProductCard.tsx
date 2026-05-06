@@ -51,7 +51,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <div className={styles.info}>
                 <div className={styles.meta}>
                     <span className={styles.category}>{product.category}</span>
-                    <span className={styles.price}>{product.price.toFixed(2)} €</span>
+                    <span className={styles.price}>{product.price.toLocaleString()} CFA</span>
                 </div>
                 <Link href={`/shop/${product.id}`}>
                     <h3 className={styles.name}>{product.name}</h3>

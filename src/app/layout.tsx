@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Maya Boutique | Spécialités Africaines et Sénégalaises à Lyon",
-  description: "Boutique africaine à Lyon proposant épicerie fine, bijoux traditionnels et artisanat du Sénégal.",
+  title: "Fresh Fruit | Vos fruits frais et jus naturels livrés à domicile",
+  description: "Dégustez la fraîcheur avec Fresh Fruit. Large sélection de fruits de saison, jus pressés à froid et paniers gourmands.",
 };
 
 import { CartProvider } from "@/context/CartContext";

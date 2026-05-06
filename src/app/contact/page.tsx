@@ -14,7 +14,7 @@ export default function ContactPage() {
                 transition={{ duration: 0.6 }}
             >
                 <h1 className={styles.title}>Contactez-nous</h1>
-                <p className={styles.subtitle}>Une question ? Un projet ? Notre équipe à Lyon est à votre écoute.</p>
+                <p className={styles.subtitle}>Une question ? Un projet ? Notre équipe à Dakar est à votre écoute.</p>
             </motion.header>
 
             <div className={styles.layout}>
@@ -41,7 +41,7 @@ export default function ContactPage() {
                             <select id="subject">
                                 <option>Information produit</option>
                                 <option>Suivi de commande</option>
-                                <option>Demande d'artisanat sur mesure</option>
+                                <option>Livraison & Paniers</option>
                                 <option>Autre</option>
                             </select>
                         </div>
@@ -72,7 +72,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className={styles.infoLabel}>Adresse</p>
-                                    <p>Lyon, France (Quartier Guillotière)</p>
+                                    <p>Point E, Dakar, Sénégal</p>
                                 </div>
                             </div>
                             <div className={styles.infoItem}>
@@ -90,7 +90,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className={styles.infoLabel}>Email</p>
-                                    <p>contact@maya-boutique.fr</p>
+                                    <p>contact@fresh-fruit.fr</p>
                                 </div>
                             </div>
                         </div>
@@ -110,15 +110,9 @@ export default function ContactPage() {
                     </div>
 
                     <div className={styles.mapContainer}>
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26483.81716756815!2d4.832894615621321!3d45.75578952093839!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6e0d82edee1b3b%3A0xf4a51f5185124180!2sMaya-boutique%20Lyon!5e0!3m2!1sfr!2sfr!4v1771174019514!5m2!1sfr!2sfr"
-                            width="100%"
-                            height="300"
-                            style={{ border: 0, borderRadius: 'var(--border-radius-md)' }}
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                        ></iframe>
+                    <div className={styles.mapPlaceholder}>
+                        <p>Retrouvez-nous au Point E, Dakar</p>
+                    </div>
                     </div>
                 </motion.div>
             </div>

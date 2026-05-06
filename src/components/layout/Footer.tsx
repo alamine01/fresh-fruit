@@ -14,13 +14,12 @@ const Footer = () => {
                 <div className={styles.brand}>
                     <div className={styles.logo}>
                         <Link href="/">
-                            <span className={styles.maya}>Maya</span>
-                            <span className={styles.boutique}>Boutique</span>
+                            <img src="/logo.png" alt="Fresh Fruit Logo" className={styles.logoImg} />
                         </Link>
                     </div>
                     <p className={styles.description}>
-                        L'art de vivre africain à Lyon.
-                        Une sélection authentique pour sublimer votre quotidien.
+                        La fraîcheur de la nature directement chez vous.
+                        Fruits de saison et jus naturels pour une vie pleine de vitalité.
                     </p>
                     <div className={styles.social}>
                         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Facebook">
@@ -39,7 +38,6 @@ const Footer = () => {
                     <div className={styles.links}>
                         <h3>Explorer</h3>
                         <Link href="/shop" className={styles.link}>Boutique</Link>
-                        <Link href="/about" className={styles.link}>À propos</Link>
                         <Link href="/contact" className={styles.link}>Contact</Link>
                     </div>
 
@@ -47,7 +45,6 @@ const Footer = () => {
                         <h3>Aide</h3>
                         <Link href="/cgv" className={styles.link}>Livraison & Retours</Link>
                         <Link href="/legal" className={styles.link}>Mentions Légales</Link>
-                        <Link href="/contact" className={styles.link}>FAQ</Link>
                     </div>
                 </div>
 
@@ -55,15 +52,15 @@ const Footer = () => {
                     <h3>Nous trouver</h3>
                     <div className={styles.contactItem}>
                         <MapPin size={16} />
-                        <span>7 Rue de Marseille, 69007 Lyon</span>
+                        <span>Point E, Dakar, Sénégal</span>
                     </div>
                     <div className={styles.contactItem}>
                         <Phone size={16} />
-                        <span>+33 7 53 13 65 28</span>
+                        <span>+221 33 824 00 00</span>
                     </div>
                     <div className={styles.contactItem}>
                         <Mail size={16} />
-                        <span>contact@maya-boutique.fr</span>
+                        <span>contact@fresh-fruit.fr</span>
                     </div>
                     <div className={styles.contactItem}>
                         <Clock size={16} />
@@ -77,7 +74,7 @@ const Footer = () => {
 
             <div className={styles.bottom}>
                 <div className={`container ${styles.bottomContainer}`}>
-                    <p>&copy; {currentYear} Maya Boutique. Conçu avec passion à Lyon.</p>
+                    <p>&copy; {currentYear} Fresh Fruit. Fraîcheur garantie.</p>
                     <div className={styles.bottomLegal}>
                         <Link href="/legal">Vie privée</Link>
                         <span className={styles.divider}>•</span>

@@ -1,11 +1,12 @@
 .hero {
     position: relative;
-    padding: 10rem 0 8rem;
+    padding: 8rem 0 6rem;
     overflow: hidden;
     background: var(--background);
     min-height: 90vh;
     display: flex;
     align-items: center;
+    margin-top: -100px;
 }
 
 .decorativeBg {
@@ -88,7 +89,7 @@
     height: 240px;
     background: var(--primary-yellow);
     border-radius: var(--border-radius-md);
-    border: 8px solid var(--background);
+    border: 4px solid #ffffff;
     box-shadow: var(--shadow-md);
     z-index: 2;
     overflow: hidden;
@@ -128,9 +129,19 @@
     }
 }
 
+.mobileBr {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobileBr {
+        display: block;
+    }
+}
+
 @media (max-width: 768px) {
     .hero {
-        padding: 5rem 0 2rem;
+        padding: 10rem 0 2rem;
         min-height: auto;
     }
 
@@ -161,8 +172,9 @@
     }
 
     .cta :global(.btn) {
-        width: 100%;
-        padding: 1rem;
+        width: fit-content;
+        align-self: center;
+        padding: 0.75rem 1.5rem;
     }
 
     .imageContainer {
