@@ -13,6 +13,7 @@ import {
 import { motion } from "framer-motion";
 
 export default function AdminCustomers() {
+    const [openMenu, setOpenMenu] = useState<number | null>(null);
     // Placeholder data for now - could be fetched from Firestore 'users' collection
     const [customers] = useState([
         { id: 1, name: "Moussa Diop", email: "moussa@example.com", joinDate: "12 Mai 2024", orders: 5 },
@@ -70,9 +71,36 @@ export default function AdminCustomers() {
                                     <span style={{ fontWeight: 700, color: '#1a1a1a' }}>{customer.orders} achats</span>
                                 </td>
                                 <td>
-                                    <button className={styles.actionBtn} style={{ backgroundColor: '#f5f5f5', color: '#666' }}>
-                                        <MoreVertical size={18} />
-                                    </button>
+                                    <div style={{ position: 'relative' }}>
+                                        <button 
+                                            className={styles.actionBtn} 
+                                            style={{ backgroundColor: '#f5f5f5', color: '#666' }}
+                                            onClick={() => setOpenMenu(openMenu === customer.id ? null : customer.id)}
+                                        >
+                                            <MoreVertical size={18} />
+                                        </button>
+
+                                        <AnimatePresence>
+                                            {openMenu === customer.id && (
+                                                <motion.div 
+                                                    className={styles.dropdown}
+                                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                >
+                                                    <button onClick={() => alert(`Détails de ${customer.name}`)}>
+                                                        Voir détails
+                                                    </button>
+                                                    <button onClick={() => window.location.href = `mailto:${customer.email}`}>
+                                                        Envoyer Email
+                                                    </button>
+                                                    <button style={{ color: '#d32f2f' }} onClick={() => alert(`Supprimer ${customer.name}`)}>
+                                                        Supprimer
+                                                    </button>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
                                 </td>
                             </motion.tr>
                         ))}
