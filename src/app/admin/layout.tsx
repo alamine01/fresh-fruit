@@ -9,7 +9,8 @@ import {
     Users, 
     Settings, 
     LogOut,
-    Apple
+    Apple,
+    ShoppingBag
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -18,6 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const menuItems = [
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
         { icon: ShoppingBasket, label: "Produits", href: "/admin/products" },
+        { icon: ShoppingBag, label: "Commandes", href: "/admin/orders" },
         { icon: Users, label: "Clients", href: "/admin/customers" },
         { icon: Settings, label: "Paramètres", href: "/admin/settings" },
     ];
