@@ -355,10 +355,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 70%);
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
   display: flex;
-  align-items: center;
-  padding: 0 8%;
+  align-items: flex-end;
+  padding: 4rem 8%;
   pointer-events: none;
 }
 
