@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../products/products.module.css";
+import { db } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { 
     Save, 
     Store, 
@@ -9,9 +11,11 @@ import {
     Shield, 
     Globe,
     Phone,
-    MapPin
+    MapPin,
+    Loader2,
+    CheckCircle
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminSettings() {
     const [settings, setSettings] = useState({
@@ -22,6 +26,39 @@ export default function AdminSettings() {
         notifications: true,
         maintenanceMode: false
     });
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const docRef = doc(db, "settings", "general");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setSettings(docSnap.data() as any);
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement des paramètres:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchSettings();
+    }, []);
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            await setDoc(doc(db, "settings", "general"), settings);
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 3000);
+        } catch (error) {
+            alert("Erreur lors de la sauvegarde");
+        } finally {
+            setSaving(false);
+        }
+    };
 
     return (
         <div className={styles.productPage}>
@@ -30,12 +67,37 @@ export default function AdminSettings() {
                     <h1>Paramètres</h1>
                     <p>Configurez les informations générales de votre boutique.</p>
                 </div>
-                <button className="btn btn-primary" style={{ gap: '0.5rem' }}>
-                    <Save size={20} /> Enregistrer
+                <button 
+                    className="btn btn-primary" 
+                    style={{ gap: '0.5rem', minWidth: '150px' }}
+                    onClick={handleSave}
+                    disabled={saving || loading}
+                >
+                    {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                    {saving ? "Sauvegarde..." : "Enregistrer"}
                 </button>
             </header>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+            <AnimatePresence>
+                {showSuccess && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        style={{ background: '#E8F5E9', color: '#2E7D32', padding: '1rem', borderRadius: '15px', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}
+                    >
+                        <CheckCircle size={20} /> Paramètres mis à jour avec succès !
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {loading ? (
+                <div style={{ padding: '10rem', textAlign: 'center' }}>
+                    <Loader2 className="animate-spin" size={48} style={{ color: 'var(--primary-green)', margin: '0 auto' }} />
+                    <p style={{ marginTop: '1rem', color: '#666' }}>Chargement des réglages...</p>
+                </div>
+            ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                 <motion.section 
                     style={{ background: 'white', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}
                     initial={{ opacity: 0, y: 20 }}
@@ -104,7 +166,7 @@ export default function AdminSettings() {
                         </div>
                     </motion.section>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
