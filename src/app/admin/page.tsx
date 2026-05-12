@@ -112,15 +112,29 @@ export default function AdminDashboard() {
             revenue
         }));
 
-        setChartData(formattedChartData.length > 0 ? formattedChartData : [
-            { name: 'Lun', revenue: 0 },
-            { name: 'Mar', revenue: 0 },
-            { name: 'Mer', revenue: 0 },
-            { name: 'Jeu', revenue: 0 },
-            { name: 'Ven', revenue: 0 },
-            { name: 'Sam', revenue: 0 },
-            { name: 'Dim', revenue: 0 },
-        ]);
+        if (formattedChartData.length > 0) {
+            setChartData(formattedChartData);
+        } else {
+            // Données par défaut selon la période
+            if (timeRange === "week") {
+                setChartData([
+                    { name: 'Lun', revenue: 0 }, { name: 'Mar', revenue: 0 }, { name: 'Mer', revenue: 0 },
+                    { name: 'Jeu', revenue: 0 }, { name: 'Ven', revenue: 0 }, { name: 'Sam', revenue: 0 }, { name: 'Dim', revenue: 0 },
+                ]);
+            } else if (timeRange === "month") {
+                setChartData([
+                    { name: 'Sem 1', revenue: 0 }, { name: 'Sem 2', revenue: 0 }, 
+                    { name: 'Sem 3', revenue: 0 }, { name: 'Sem 4', revenue: 0 },
+                ]);
+            } else if (timeRange === "year") {
+                setChartData([
+                    { name: 'Jan', revenue: 0 }, { name: 'Fév', revenue: 0 }, { name: 'Mar', revenue: 0 },
+                    { name: 'Avr', revenue: 0 }, { name: 'Mai', revenue: 0 }, { name: 'Juin', revenue: 0 },
+                    { name: 'Juil', revenue: 0 }, { name: 'Août', revenue: 0 }, { name: 'Sept', revenue: 0 },
+                    { name: 'Oct', revenue: 0 }, { name: 'Nov', revenue: 0 }, { name: 'Déc', revenue: 0 },
+                ]);
+            }
+        }
     }, [timeRange, allOrders]);
 
     return (
