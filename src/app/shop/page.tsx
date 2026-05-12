@@ -1,32 +1,36 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Product } from '@/types';
 import ProductCard from '@/components/product/ProductCard';
+import { getProducts } from '@/lib/firestore';
 import styles from './page.module.css';
 import { Filter, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Données réelles Fresh Fruit - URLs d'images vérifiées
-const products: Product[] = [
-    { id: '1', name: 'Pommes Gala (Kg)', price: 1500, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&q=80&w=600', description: 'Pommes croquantes et sucrées, idéales pour le goûter.' },
-    { id: '2', name: 'Bananes Bio (6 pièces)', price: 2000, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=600', description: 'Bananes biologiques issues du commerce équitable.' },
-    { id: '3', name: 'Mangue Kent d\'Exception', price: 1800, category: 'Exotiques', image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&q=80&w=600', description: 'Mangue charnue et sans fibres, mûrie à point.' },
-    { id: '4', name: 'Fraises de Saison (250g)', price: 3000, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1464965211926-1d820b7095a0?auto=format&fit=crop&q=80&w=600', description: 'Fraises locales ultra-fraîches et parfumées.' },
-    { id: '5', name: 'Jus d\'Orange Pressé (1L)', price: 3500, category: 'Jus Naturels', image: 'https://images.unsplash.com/photo-1600271886342-dc672e471b99?auto=format&fit=crop&q=80&w=600', description: '100% pur jus pressé chaque matin, sans additifs.' },
-    { id: '6', name: 'Panier Famille Hebdo', price: 20000, category: 'Paniers Mixtes', image: 'https://images.unsplash.com/photo-1610397648930-477b8c7f0943?auto=format&fit=crop&q=80&w=600', description: 'Un assortiment de 5kg de fruits de saison pour toute la famille.' },
-    { id: '7', name: 'Jus Pomme-Gingembre (250ml)', price: 2000, category: 'Jus Naturels', image: 'https://images.unsplash.com/photo-1544787210-2211d7c9282b?auto=format&fit=crop&q=80&w=600', description: 'Un cocktail énergisant pressé à froid.' },
-    { id: '8', name: 'Ananas Victoria (Pièce)', price: 3000, category: 'Exotiques', image: 'https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&q=80&w=600', description: 'Le plus petit et le plus sucré des ananas.' },
-    { id: '9', name: 'Panier Bureau Vitaminé', price: 15000, category: 'Paniers Mixtes', image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&q=80&w=600', description: 'Sélection de fruits faciles à déguster sur son lieu de travail.' },
-    { id: '10', name: 'Framboises Fraîches (125g)', price: 2500, category: 'Fruits de Saison', image: 'https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&q=80&w=600', description: 'Framboises cueillies à la main, un délice de finesse.' },
-];
-
 const categories = ['Tous', 'Fruits de Saison', 'Jus Naturels', 'Paniers Mixtes', 'Exotiques'];
 
 export default function ShopPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState('Tous');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [maxPrice, setMaxPrice] = useState(25000);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const data = await getProducts();
+                setProducts(data);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     const filteredProducts = products.filter(product => {
         const matchesCategory = activeCategory === 'Tous' || product.category === activeCategory;
@@ -157,25 +161,39 @@ export default function ShopPage() {
                         </div>
                     </div>
 
-                    <motion.div
-                        className={styles.productGrid}
-                        layout
-                    >
-                        <AnimatePresence mode='popLayout'>
-                            {filteredProducts.map((product, index) => (
+                    <div className={styles.productGrid} style={{ minHeight: '400px' }}>
+                        {loading ? (
+                            <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '5rem' }}>
                                 <motion.div
-                                    key={product.id}
-                                    layout
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ delay: index * 0.05, duration: 0.4 }}
-                                >
-                                    <ProductCard product={product} />
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
+                                    animate={{ rotate: 360 }}
+                                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                                    style={{ width: 50, height: 50, border: '5px solid #eee', borderTopColor: 'var(--primary-green)', borderRadius: '50%' }}
+                                />
+                                <p style={{ marginTop: '1rem', color: '#666', fontWeight: 600 }}>Récolte de vos fruits en cours...</p>
+                            </div>
+                        ) : (
+                            <AnimatePresence mode='popLayout'>
+                                {filteredProducts.length > 0 ? (
+                                    filteredProducts.map((product, index) => (
+                                        <motion.div
+                                            key={product.id}
+                                            layout
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{ delay: index * 0.05, duration: 0.4 }}
+                                        >
+                                            <ProductCard product={product} />
+                                        </motion.div>
+                                    ))
+                                ) : (
+                                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem' }}>
+                                        <p style={{ fontSize: '1.2rem', color: '#666' }}>Aucun produit ne correspond à vos critères.</p>
+                                    </div>
+                                )}
+                            </AnimatePresence>
+                        )}
+                    </div>
                 </main>
             </div>
         </div>
