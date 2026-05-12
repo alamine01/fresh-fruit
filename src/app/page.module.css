@@ -479,8 +479,20 @@
     gap: 2rem;
   }
   
+  .impactText h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  .impactText p {
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
   .impactImage {
     order: -1;
+    border-radius: 25px;
   }
   
   .videoOverlay {
