@@ -107,7 +107,15 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800" alt="Produits frais du terroir" />
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              >
+                <source src="https://firebasestorage.googleapis.com/v0/b/fresh-fruit-3f64d.firebasestorage.app/o/video_2026-05-12_19-09-31.mp4?alt=media&token=a9856dbc-f410-464f-a11e-e8bc12344c77" type="video/mp4" />
+              </video>
             </motion.div>
           </div>
         </div>
