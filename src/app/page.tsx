@@ -83,7 +83,7 @@ export default function Home() {
               viewport={{ once: true }}
             >
               <span className={styles.badgeOrange}>Notre Vision</span>
-              <h2>Boostons Ensemble nos Agriculteurs Locaux</h2>
+              <h2>Soutenons nos Producteurs Locaux</h2>
               <p>
                 Fresh Fruit s'engage pour la jeunesse agricole du Sénégal. En travaillant avec nos fournisseurs locaux, nous garantissons des produits sains et soutenons l'économie de nos régions.
               </p>
