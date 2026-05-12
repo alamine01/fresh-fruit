@@ -160,3 +160,39 @@
     text-decoration: underline;
 }
 @media (max-width: 480px) { .loginPage { padding: 2rem 1rem; } .loginCard { padding: 2rem 1.5rem; } .header h1 { font-size: 1.5rem; } .logoCircle { width: 56px; height: 56px; margin-bottom: 1rem; } }
+.methodToggle {
+    display: flex;
+    background: #f5f5f5;
+    padding: 0.25rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.methodToggle button {
+    flex: 1;
+    padding: 0.6rem;
+    border: none;
+    background: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+}
+
+.methodToggle .activeMethod {
+    background: white;
+    color: var(--primary-green);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.errorBanner {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}

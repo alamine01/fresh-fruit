@@ -166,7 +166,8 @@ export default function AdminSettings() {
                         </div>
                     </motion.section>
                 </div>
-            )}
+            </div>
+        )}
         </div>
     );
 }

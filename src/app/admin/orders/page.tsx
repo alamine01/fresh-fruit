@@ -17,7 +17,10 @@ import {
     CheckCircle, 
     XCircle, 
     Package,
-    ChevronDown
+    ChevronDown,
+    Phone,
+    MapPin,
+    Loader2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -25,6 +28,8 @@ export default function AdminOrders() {
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
+    const [statusFilter, setStatusFilter] = useState<string>("all");
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     // Synchronisation en temps réel avec Firestore
     useEffect(() => {
@@ -33,7 +38,6 @@ export default function AdminOrders() {
             const ordersData = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
-                // Formatage de la date si c'est un Timestamp Firebase
                 date: doc.data().createdAt?.toDate ? 
                       doc.data().createdAt.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 
                       "Date inconnue"
@@ -47,6 +51,11 @@ export default function AdminOrders() {
 
         return () => unsubscribe();
     }, []);
+
+    const filteredOrders = orders.filter(order => {
+        if (statusFilter === "all") return true;
+        return order.status === statusFilter;
+    });
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -68,6 +77,16 @@ export default function AdminOrders() {
         }
     };
 
+    const updatePaymentStatus = async (orderId: string, newStatus: string) => {
+        try {
+            const orderRef = doc(db, "orders", orderId);
+            await updateDoc(orderRef, { paymentStatus: newStatus });
+        } catch (error) {
+            console.error("Erreur mise à jour paiement:", error);
+            alert("Erreur lors de la mise à jour du paiement");
+        }
+    };
+
     return (
         <div className={styles.productPage}>
             <header className={styles.pageHeader}>
@@ -77,69 +96,146 @@ export default function AdminOrders() {
                 </div>
             </header>
 
-            <div className={styles.tableContainer}>
-                {loading ? (
-                    <div style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>
-                        Chargement des commandes...
+            {loading ? (
+                <div className={styles.tableContainer}>
+                    <div style={{ padding: '5rem', textAlign: 'center' }}>
+                        <Loader2 className="animate-spin" size={40} style={{ color: 'var(--primary-green)', margin: '0 auto' }} />
+                        <p style={{ marginTop: '1rem', color: '#666' }}>Chargement des commandes...</p>
                     </div>
-                ) : orders.length === 0 ? (
-                    <div style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>
-                        <ShoppingBag size={48} style={{ marginBottom: '1rem', opacity: 0.2 }} />
-                        <p>Aucune commande pour le moment.</p>
-                    </div>
-                ) : (
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th>Client</th>
-                                <th className={styles.hideMobile}>Total</th>
-                                <th>Statut</th>
-                                <th>Détails</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders.map((order, i) => (
-                                <motion.tr 
-                                    key={order.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                >
-                                    <td>
-                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                            <span style={{ fontWeight: 700 }}>{order.customerName || "Anonyme"}</span>
-                                            <span className={styles.hideMobile} style={{ fontSize: '0.8rem', color: '#888' }}>{order.itemsSummary || "Détails indisponibles"}</span>
-                                        </div>
-                                    </td>
-                                    <td className={styles.hideMobile}><span className={styles.priceTag}>{order.total?.toLocaleString() || 0} CFA</span></td>
-                                    <td>
-                                        <span style={{ 
-                                            padding: '0.4rem 0.8rem', 
-                                            borderRadius: '20px', 
-                                            fontSize: '0.75rem', 
-                                            fontWeight: 700, 
-                                            backgroundColor: `${getStatusColor(order.status)}15`,
-                                            color: getStatusColor(order.status),
-                                            border: `1px solid ${getStatusColor(order.status)}30`
-                                        }}>
-                                            {order.status || "En attente"}
-                                        </span>
-                                    </td>
-                                    <td>
+                </div>
+            ) : (
+                <div className="orders-content">
+                    <div className={styles.actionBar}>
+                        <div style={{ flex: 1 }}>
+                            <p style={{ fontWeight: 600, color: '#666' }}>Filtrez vos commandes pour un meilleur suivi</p>
+                        </div>
+                        <div style={{ position: 'relative' }}>
+                            <button 
+                                className={styles.filterSelect}
+                                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                                style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.8rem',
+                                    justifyContent: 'space-between',
+                                    paddingRight: '1rem'
+                                }}
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                                    <Clock size={18} style={{ color: statusFilter === "all" ? "#888" : getStatusColor(statusFilter) }} />
+                                    <span>
+                                        {statusFilter === "all" ? "Tous les statuts" : statusFilter}
+                                    </span>
+                                </div>
+                                <ChevronDown size={16} style={{ transform: isFilterOpen ? 'rotate(180deg)' : 'none', transition: '0.3s' }} />
+                            </button>
+
+                            <AnimatePresence>
+                                {isFilterOpen && (
+                                    <motion.div 
+                                        className={styles.dropdown}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        style={{ width: '220px', padding: '0.5rem', right: 0 }}
+                                    >
                                         <button 
-                                            className={styles.actionBtn} 
-                                            style={{ backgroundColor: 'var(--primary-green)', color: 'white' }}
-                                            onClick={() => setSelectedOrder(order)}
+                                            onClick={() => { setStatusFilter("all"); setIsFilterOpen(false); }}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '10px' }}
                                         >
-                                            <ChevronDown size={18} />
+                                            <Package size={16} /> Tous
                                         </button>
-                                    </td>
-                                </motion.tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-            </div>
+                                        <button 
+                                            onClick={() => { setStatusFilter("En attente"); setIsFilterOpen(false); }}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '10px' }}
+                                        >
+                                            <Clock size={16} color="#FF9800" /> En attente
+                                        </button>
+                                        <button 
+                                            onClick={() => { setStatusFilter("En préparation"); setIsFilterOpen(false); }}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '10px' }}
+                                        >
+                                            <ShoppingBag size={16} color="#2196F3" /> Préparation
+                                        </button>
+                                        <button 
+                                            onClick={() => { setStatusFilter("Livré"); setIsFilterOpen(false); }}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '10px' }}
+                                        >
+                                            <CheckCircle size={16} color="#4CAF50" /> Livré
+                                        </button>
+                                        <button 
+                                            onClick={() => { setStatusFilter("Annulé"); setIsFilterOpen(false); }}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '10px' }}
+                                        >
+                                            <XCircle size={16} color="#F44336" /> Annulé
+                                        </button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
+
+                    <div className={styles.tableContainer} style={{ overflow: 'visible' }}>
+                        {filteredOrders.length === 0 ? (
+                            <div style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>
+                                <ShoppingBag size={48} style={{ marginBottom: '1rem', opacity: 0.2 }} />
+                                <p>Aucune commande correspondant à ce filtre.</p>
+                            </div>
+                        ) : (
+                            <table className={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th className={styles.hideMobile}>Total</th>
+                                        <th>Statut</th>
+                                        <th>Détails</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredOrders.map((order, i) => (
+                                        <motion.tr 
+                                            key={order.id}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.05 }}
+                                        >
+                                            <td>
+                                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                    <span style={{ fontWeight: 700 }}>{order.customerName || (order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : "Anonyme")}</span>
+                                                    <span className={styles.hideMobile} style={{ fontSize: '0.8rem', color: '#888' }}>{order.itemsSummary || "Détails indisponibles"}</span>
+                                                </div>
+                                            </td>
+                                            <td className={styles.hideMobile}><span className={styles.priceTag}>{order.total?.toLocaleString() || 0} CFA</span></td>
+                                            <td>
+                                                <span style={{ 
+                                                    padding: '0.4rem 0.8rem', 
+                                                    borderRadius: '20px', 
+                                                    fontSize: '0.75rem', 
+                                                    fontWeight: 700, 
+                                                    backgroundColor: `${getStatusColor(order.status)}15`,
+                                                    color: getStatusColor(order.status),
+                                                    border: `1px solid ${getStatusColor(order.status)}30`
+                                                }}>
+                                                    {order.status || "En attente"}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button 
+                                                    className={styles.actionBtn} 
+                                                    style={{ backgroundColor: 'var(--primary-green)', color: 'white' }}
+                                                    onClick={() => setSelectedOrder(order)}
+                                                >
+                                                    <ChevronDown size={18} />
+                                                </button>
+                                            </td>
+                                        </motion.tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Order Detail Modal */}
             <AnimatePresence>
@@ -166,25 +262,67 @@ export default function AdminOrders() {
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                     <div>
                                         <p style={{ fontSize: '0.8rem', color: '#888' }}>Client</p>
-                                        <p style={{ fontWeight: 700 }}>{selectedOrder.customer}</p>
+                                        <p style={{ fontWeight: 700 }}>
+                                            {selectedOrder.customer?.firstName} {selectedOrder.customer?.lastName}
+                                        </p>
+                                        <p style={{ fontSize: '0.85rem', color: '#666', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                            <Phone size={14} style={{ color: 'var(--primary-green)' }} /> {selectedOrder.customer?.phone}
+                                        </p>
                                     </div>
                                     <div>
                                         <p style={{ fontSize: '0.8rem', color: '#888' }}>Date</p>
                                         <p style={{ fontWeight: 700 }}>{selectedOrder.date}</p>
+                                        <p style={{ fontSize: '0.85rem', color: '#666', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                            <MapPin size={14} style={{ color: 'var(--primary-green)' }} /> {selectedOrder.customer?.neighborhood}
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div>
                                     <p style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.5rem' }}>Produits</p>
-                                    <p style={{ background: '#fff', border: '1px solid #eee', padding: '1rem', borderRadius: '10px' }}>{selectedOrder.items}</p>
+                                    <div style={{ background: '#fff', border: '1px solid #eee', padding: '1rem', borderRadius: '10px' }}>
+                                        {selectedOrder.items?.map((item: any, idx: number) => (
+                                            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                                                <span>{item.quantity}x {item.name}</span>
+                                                <span style={{ fontWeight: 700 }}>{(item.price * item.quantity).toLocaleString()} CFA</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid #eee' }}>
                                     <div>
                                         <p style={{ fontSize: '0.8rem', color: '#888' }}>Total à payer</p>
-                                        <p style={{ fontSize: '1.5rem', fontWeight: 900, color: '#1a1a1a' }}>{selectedOrder.total.toLocaleString()} CFA</p>
+                                        <p style={{ fontSize: '1.5rem', fontWeight: 900, color: '#1a1a1a' }}>{selectedOrder.total?.toLocaleString()} CFA</p>
+                                        <span style={{ 
+                                            display: 'inline-block', 
+                                            marginTop: '0.5rem', 
+                                            padding: '0.3rem 0.8rem', 
+                                            borderRadius: '20px', 
+                                            fontSize: '0.75rem', 
+                                            fontWeight: 700, 
+                                            backgroundColor: selectedOrder.paymentStatus === 'Payé' ? '#E8F5E9' : '#FFEBEE',
+                                            color: selectedOrder.paymentStatus === 'Payé' ? '#2E7D32' : '#D32F2F'
+                                        }}>
+                                            {selectedOrder.paymentStatus === 'Payé' ? 'Payé' : 'Non payé'}
+                                        </span>
                                     </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <div style={{ display: 'flex', gap: '1rem' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                            <p style={{ fontSize: '0.8rem', color: '#888' }}>Paiement</p>
+                                            <select 
+                                                value={selectedOrder.paymentStatus || "Non payé"} 
+                                                onChange={(e) => {
+                                                    updatePaymentStatus(selectedOrder.id, e.target.value);
+                                                    setSelectedOrder({...selectedOrder, paymentStatus: e.target.value});
+                                                }}
+                                                style={{ padding: '0.5rem', borderRadius: '10px', border: '1px solid #eee' }}
+                                            >
+                                                <option>Non payé</option>
+                                                <option>Payé</option>
+                                            </select>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                         <p style={{ fontSize: '0.8rem', color: '#888' }}>Modifier Statut</p>
                                         <select 
                                             value={selectedOrder.status} 
@@ -199,6 +337,7 @@ export default function AdminOrders() {
                                             <option>Livré</option>
                                             <option>Annulé</option>
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

@@ -49,6 +49,22 @@
     box-shadow: var(--shadow-sm);
 }
 
+.outOfStockBadge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: #f44336;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 2;
+    box-shadow: var(--shadow-sm);
+}
+
 .actionsOverlay {
     position: absolute;
     bottom: 0;
@@ -141,7 +157,8 @@
     border-radius: 9999px;
     font-size: 0.9rem;
     font-weight: 700;
-    color: var(--foreground);
+    color: white;
+    background-color: var(--primary-green);
     cursor: pointer;
     transition: var(--transition-smooth);
     display: flex;

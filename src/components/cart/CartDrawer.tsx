@@ -1,6 +1,8 @@
 "use client";
 
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 import styles from './CartDrawer.module.css';
 import Link from 'next/link';
 import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight, Lock } from 'lucide-react';
@@ -8,6 +10,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const CartDrawer = () => {
     const { cart, isOpen, toggleCart, removeFromCart, updateQuantity, totalPrice } = useCart();
+    const { user } = useAuth();
+    const router = useRouter();
+
+    const handleCheckout = (e: React.MouseEvent) => {
+        e.preventDefault();
+        toggleCart(); // Fermer le panier
+        router.push('/checkout');
+    };
 
     return (
         <AnimatePresence>
@@ -103,14 +113,13 @@ const CartDrawer = () => {
                                             </div>
                                         </div>
 
-                                        <Link
-                                            href="/checkout"
+                                        <button
                                             className="btn btn-primary"
                                             style={{ width: '100%', padding: '1.25rem' }}
-                                            onClick={toggleCart}
+                                            onClick={handleCheckout}
                                         >
                                             Passer à la caisse <ArrowRight size={18} />
-                                        </Link>
+                                        </button>
 
                                         <p className={styles.secureInfo}>
                                             <Lock size={14} /> Paiement 100% sécurisé

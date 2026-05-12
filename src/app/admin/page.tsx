@@ -42,7 +42,9 @@ export default function AdminDashboard() {
                 
                 let totalRevenue = 0;
                 orders.forEach((data: any) => {
-                    totalRevenue += (data.total || 0);
+                    if (data.paymentStatus === 'Payé') {
+                        totalRevenue += (data.total || 0);
+                    }
                 });
 
                 setStats([
@@ -84,7 +86,7 @@ export default function AdminDashboard() {
 
         if (allOrders.length > 0) {
             allOrders.forEach((data: any) => {
-                if (!data.createdAt) return;
+                if (!data.createdAt || data.paymentStatus !== 'Payé') return;
                 const date = data.createdAt.toDate();
                 const rev = data.total || 0;
 

@@ -11,7 +11,8 @@ import {
     Calendar, 
     MoreVertical,
     Search,
-    Loader2
+    Loader2,
+    Phone
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -67,7 +68,6 @@ export default function AdminCustomers() {
                                 <th>Client</th>
                                 <th>Date d'inscription</th>
                                 <th>Commandes</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -86,7 +86,11 @@ export default function AdminCustomers() {
                                             <div>
                                                 <span className={styles.productName}>{customer.name || customer.displayName || "Client Anonyme"}</span>
                                                 <span style={{ fontSize: '0.8rem', color: '#888', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                    <Mail size={12} /> {customer.email}
+                                                    {customer.email ? (
+                                                        <><Mail size={12} /> {customer.email}</>
+                                                    ) : (
+                                                        <><Phone size={12} /> {customer.phone || "Pas de contact"}</>
+                                                    )}
                                                 </span>
                                             </div>
                                         </div>
@@ -99,34 +103,7 @@ export default function AdminCustomers() {
                                     <td>
                                         <span style={{ fontWeight: 700, color: '#1a1a1a' }}>{customer.orderCount || 0} achats</span>
                                     </td>
-                                    <td>
-                                        <div style={{ position: 'relative' }}>
-                                            <button 
-                                                className={styles.actionBtn} 
-                                                onClick={() => setOpenMenu(openMenu === customer.id ? null : customer.id)}
-                                            >
-                                                <MoreVertical size={18} />
-                                            </button>
 
-                                            <AnimatePresence>
-                                                {openMenu === customer.id && (
-                                                    <motion.div 
-                                                        className={styles.dropdown}
-                                                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                    >
-                                                        <button onClick={() => alert(`Détails de ${customer.name}`)}>
-                                                            Voir détails
-                                                        </button>
-                                                        <button onClick={() => window.location.href = `mailto:${customer.email}`}>
-                                                            Envoyer Email
-                                                        </button>
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
-                                        </div>
-                                    </td>
                                 </motion.tr>
                             ))}
                         </tbody>

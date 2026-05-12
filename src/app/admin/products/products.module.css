@@ -15,6 +15,7 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   overflow-x: auto;
   border: 1px solid #eee;
+  min-height: 400px;
 }
 
 .table {
@@ -240,5 +241,80 @@
   
   .table {
     min-width: unset;
+  }
+}
+
+.actionBar {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  align-items: center;
+  background: white;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid #eee;
+  box-shadow: var(--shadow-subtle);
+}
+
+.searchBar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f9f9f9;
+  padding: 0 1.5rem;
+  border-radius: 15px;
+  height: 54px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.searchBar:focus-within {
+  background: white;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+}
+
+.searchBar input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.searchBar svg {
+  color: #888;
+}
+
+.filterSelect {
+  padding: 0 1.5rem;
+  height: 54px;
+  border-radius: 15px;
+  border: 1px solid #eee;
+  background-color: white;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 200px;
+  outline: none;
+  transition: all 0.3s ease;
+  appearance: none;
+}
+
+.filterSelect:hover {
+  border-color: var(--primary-green);
+}
+
+@media (max-width: 768px) {
+  .actionBar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem;
+  }
+  
+  .filterSelect {
+    min-width: 100%;
   }
 }

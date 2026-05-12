@@ -1,17 +1,19 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { createCheckoutSession, createLocalOrder } from "@/actions/checkout";
 import { createPayTechPayment } from "@/actions/paytech";
 import styles from "./Checkout.module.css";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Phone, User, CreditCard, Banknote, ChevronLeft, Lock, Truck } from "lucide-react";
+import { MapPin, Phone, User as UserIcon, CreditCard, Banknote, ChevronLeft, Lock, Truck, LogIn, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function CheckoutPage() {
     const { cart, totalPrice, totalItems, clearCart } = useCart();
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState("stripe");
     const [formData, setFormData] = useState({
@@ -22,6 +24,18 @@ export default function CheckoutPage() {
         neighborhood: ""
     });
     const router = useRouter();
+
+    useEffect(() => {
+        if (user) {
+            const names = (user.displayName || "").split(" ");
+            setFormData(prev => ({
+                ...prev,
+                firstName: names[0] || "",
+                lastName: names.slice(1).join(" ") || "",
+                phone: user.phoneNumber || prev.phone
+            }));
+        }
+    }, [user]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -108,10 +122,36 @@ export default function CheckoutPage() {
 
             <div className={styles.layout}>
                 <div className={styles.mainContent}>
+                    {/* Bannière d'identification optionnelle */}
+                    {!user ? (
+                        <div className={styles.authBanner}>
+                            <div className={styles.authBannerIcon}>
+                                <LogIn size={24} color="var(--primary-green)" />
+                            </div>
+                            <div className={styles.authBannerText}>
+                                <h3>Déjà client ?</h3>
+                                <p>Connectez-vous pour pré-remplir vos infos et suivre vos commandes.</p>
+                            </div>
+                            <Link href="/account/login?redirect=checkout" className={styles.authLink}>
+                                Se connecter
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className={styles.authBanner} style={{ borderColor: 'var(--primary-green)', background: '#f0f9f1' }}>
+                            <div className={styles.authBannerIcon}>
+                                <CheckCircle size={24} color="var(--primary-green)" />
+                            </div>
+                            <div className={styles.authBannerText}>
+                                <h3>Connecté en tant que {user.displayName || user.phoneNumber}</h3>
+                                <p>Vos informations sont sécurisées et votre commande sera liée à votre profil.</p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Informations de livraison */}
                     <div className={styles.section}>
                         <h2 className={styles.sectionTitle}>
-                            <User size={20} /> Informations de livraison
+                            <UserIcon size={20} /> Informations de livraison
                         </h2>
                         <div className={styles.formGroup}>
                             <div className={styles.formRow}>

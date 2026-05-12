@@ -26,6 +26,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     return (
         <div className={styles.adminLayout}>
+            {/* Mobile Header */}
+            <header className={styles.mobileHeader}>
+                <div className={styles.logo} style={{ marginBottom: 0 }}>
+                    <Apple size={24} /> <span>Fresh Admin</span>
+                </div>
+                <Link href="/" className={styles.navLink} style={{ padding: '0.5rem' }}>
+                    <LogOut size={20} />
+                </Link>
+            </header>
+
             <aside className={styles.sidebar}>
                 <div className={styles.logo}>
                     <Apple /> <span>Fresh Admin</span>
@@ -59,6 +69,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <main className={styles.mainContent}>
                 {children}
             </main>
+
+            {/* Bottom Nav for Mobile */}
+            <nav className={styles.bottomNav}>
+                {menuItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href;
+                    return (
+                        <Link 
+                            key={item.href} 
+                            href={item.href}
+                            className={`${styles.bottomNavLink} ${isActive ? styles.bottomNavActive : ""}`}
+                        >
+                            <Icon size={20} />
+                            <span>{item.label}</span>
+                        </Link>
+                    );
+                })}
+            </nav>
         </div>
     );
 }

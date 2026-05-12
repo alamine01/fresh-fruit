@@ -6,6 +6,7 @@ export interface Product {
     category: string;
     image: string;
     featured?: boolean;
+    inStock: boolean;
 }
 
 export interface Category {

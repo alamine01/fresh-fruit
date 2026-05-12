@@ -42,10 +42,31 @@ export async function createCheckoutSession(items: CartItem[]) {
     }
 }
 
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { sendAdminOrderAlert } from "@/lib/email";
+
 export async function createLocalOrder(orderData: any) {
-    // Dans une application réelle, on enregistrerait ici la commande dans Firebase
-    // Pour cet exemple, nous simulons la réussite
-    console.log("Nouvelle commande locale reçue:", orderData);
-    
-    return { success: true, orderId: "LOC-" + Math.random().toString(36).substr(2, 9) };
+    try {
+        const orderToSave = {
+            ...orderData,
+            status: "En attente",
+            createdAt: serverTimestamp(),
+            customerName: `${orderData.customer.firstName} ${orderData.customer.lastName}`,
+            itemsSummary: orderData.items.map((it: any) => `${it.quantity}x ${it.name}`).join(", ")
+        };
+
+        const docRef = await addDoc(collection(db, "orders"), orderToSave);
+        
+        // Envoyer l'alerte email
+        await sendAdminOrderAlert({
+            ...orderData,
+            id: docRef.id
+        });
+
+        return { success: true, orderId: docRef.id };
+    } catch (error: any) {
+        console.error("Erreur création commande:", error);
+        return { success: false, error: error.message };
+    }
 }

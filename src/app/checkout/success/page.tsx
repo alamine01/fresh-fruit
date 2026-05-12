@@ -10,7 +10,7 @@ export default function SuccessPage() {
 
     useEffect(() => {
         clearCart();
-    }, [clearCart]);
+    }, []); // On ne l'exécute qu'une seule fois au montage
 
     return (
         <div className={`container ${styles.empty}`}>

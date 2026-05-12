@@ -32,13 +32,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     />
                 </Link>
 
-                {product.featured && <span className={styles.badge}>Nouveau</span>}
+                {!product.inStock && (
+                    <div className={styles.outOfStockBadge}>Épuisé</div>
+                )}
 
                 <div className={styles.actionsOverlay}>
                     <button
                         className={styles.iconAction}
-                        onClick={() => addToCart(product)}
-                        title="Ajouter au panier"
+                        onClick={() => product.inStock && addToCart(product)}
+                        disabled={!product.inStock}
+                        title={product.inStock ? "Ajouter au panier" : "Indisponible"}
+                        style={{ opacity: product.inStock ? 1 : 0.5, cursor: product.inStock ? 'pointer' : 'not-allowed' }}
                     >
                         <Plus size={20} />
                     </button>
@@ -58,9 +62,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </Link>
                 <button
                     className={styles.addBtn}
-                    onClick={() => addToCart(product)}
+                    onClick={() => product.inStock && addToCart(product)}
+                    disabled={!product.inStock}
+                    style={{ 
+                        backgroundColor: product.inStock ? 'var(--primary-green)' : '#ccc',
+                        color: product.inStock ? 'white' : '#666',
+                        cursor: product.inStock ? 'pointer' : 'not-allowed',
+                        border: 'none'
+                    }}
                 >
-                    <ShoppingBag size={18} /> Ajouter au panier
+                    <ShoppingBag size={18} /> {product.inStock ? "Ajouter au panier" : "Épuisé"}
                 </button>
             </div>
         </motion.div>

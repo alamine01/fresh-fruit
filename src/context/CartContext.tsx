@@ -38,7 +38,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem('maya-cart', JSON.stringify(cart));
     }, [cart]);
 
-    const addToCart = (product: Product, quantity: number = 1) => {
+    const addToCart = React.useCallback((product: Product, quantity: number = 1) => {
         setCart((prev) => {
             const existingItem = prev.find((item) => item.id === product.id);
             if (existingItem) {
@@ -49,22 +49,22 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             return [...prev, { ...product, quantity }];
         });
         setIsOpen(true);
-    };
+    }, []);
 
-    const removeFromCart = (productId: string) => {
+    const removeFromCart = React.useCallback((productId: string) => {
         setCart((prev) => prev.filter((item) => item.id !== productId));
-    };
+    }, []);
 
-    const updateQuantity = (productId: string, quantity: number) => {
+    const updateQuantity = React.useCallback((productId: string, quantity: number) => {
         if (quantity < 1) return;
         setCart((prev) =>
             prev.map((item) => (item.id === productId ? { ...item, quantity } : item))
         );
-    };
+    }, []);
 
-    const clearCart = () => setCart([]);
+    const clearCart = React.useCallback(() => setCart([]), []);
 
-    const toggleCart = () => setIsOpen(!isOpen);
+    const toggleCart = React.useCallback(() => setIsOpen((prev) => !prev), []);
 
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);

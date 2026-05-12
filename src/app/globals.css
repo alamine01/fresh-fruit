@@ -170,4 +170,8 @@ h6 {
   .section-title {
     font-size: 2rem;
   }
+  .btn {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+  }
 }

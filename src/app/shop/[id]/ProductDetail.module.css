@@ -2,8 +2,31 @@
     padding: 3rem 0;
 }
 
+.topNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    transition: var(--transition-smooth);
+    font-size: 0.9rem;
+}
+
+.backBtn:hover {
+    color: var(--primary-red);
+    transform: translateX(-5px);
+}
+
 .breadcrumb {
-    margin-bottom: 3rem;
     font-size: 0.9rem;
     color: var(--text-muted);
 }
@@ -193,6 +216,10 @@
     }
 
     .quantity button {
-        width: 60px;
+        width: 50px;
+    }
+
+    .actions {
+        gap: 0.8rem;
     }
 }
