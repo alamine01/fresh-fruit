@@ -82,22 +82,22 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <span className={styles.badge}>Notre Vision</span>
+              <span className={styles.badgeOrange}>Notre Vision</span>
               <h2>Boostons Ensemble nos Agriculteurs Locaux</h2>
               <p>
                 Fresh Fruit s'engage pour la jeunesse agricole du Sénégal. En travaillant avec nos fournisseurs locaux, nous garantissons des produits sains et soutenons l'économie de nos régions.
               </p>
               <div className={styles.impactStats}>
-                <div className={styles.statItem}>
+                <div className={styles.statItemOrange}>
                   <strong>+50</strong>
                   <span>Agriculteurs partenaires</span>
                 </div>
-                <div className={styles.statItem}>
+                <div className={styles.statItemOrange}>
                   <strong>3</strong>
                   <span>Magasins à Dakar</span>
                 </div>
               </div>
-              <Link href="/about" className="btn btn-primary">
+              <Link href="/about" className="btn btn-secondary">
                 En savoir plus sur notre vision
               </Link>
             </motion.div>
@@ -107,7 +107,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <img src="https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?auto=format&fit=crop&q=80&w=800" alt="Produits frais" />
+              <img src="https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?auto=format&fit=crop&q=80&w=800" alt="Produits frais du terroir" />
             </motion.div>
           </div>
         </div>

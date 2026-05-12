@@ -387,45 +387,53 @@
   border-top: 1px solid var(--border-color);
 }
 
-.impactGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8rem;
-  align-items: center;
+.badgeOrange {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  background: rgba(230, 81, 0, 0.1);
+  color: var(--primary-orange);
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .impactText h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
   margin-bottom: 2rem;
-  line-height: 1.2;
+  line-height: 1.1;
+  font-weight: 900;
 }
 
 .impactText p {
   color: var(--text-muted);
-  font-size: 1.2rem;
-  line-height: 1.8;
-  margin-bottom: 3rem;
+  font-size: 1.25rem;
+  line-height: 1.9;
+  margin-bottom: 3.5rem;
 }
 
 .impactStats {
   display: flex;
   gap: 4rem;
-  margin-bottom: 3.5rem;
+  margin-bottom: 4rem;
 }
 
-.statItem {
+.statItemOrange {
   display: flex;
   flex-direction: column;
 }
 
-.statItem strong {
-  font-size: 3rem;
-  color: var(--primary-green);
+.statItemOrange strong {
+  font-size: 3.5rem;
+  color: var(--primary-orange);
   line-height: 1;
   margin-bottom: 0.5rem;
+  font-weight: 900;
 }
 
-.statItem span {
+.statItemOrange span {
   font-size: 1rem;
   color: var(--text-muted);
   font-weight: 700;
@@ -434,17 +442,18 @@
 }
 
 .impactImage {
-  border-radius: var(--border-radius-lg);
+  border-radius: 40px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 30px 60px rgba(230, 81, 0, 0.1);
   aspect-ratio: 4/3;
+  border: 1px solid rgba(230, 81, 0, 0.05);
 }
 
 .impactImage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .impactImage:hover img {
