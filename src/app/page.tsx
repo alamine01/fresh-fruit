@@ -57,6 +57,7 @@ export default function Home() {
               loop 
               muted 
               playsInline 
+              preload="metadata"
               className={styles.homeVideo}
               poster="/hero-fruit.jpg"
             >
@@ -112,6 +113,7 @@ export default function Home() {
                 loop 
                 muted 
                 playsInline 
+                preload="metadata"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               >
                 <source src="https://firebasestorage.googleapis.com/v0/b/fresh-fruit-3f64d.firebasestorage.app/o/video_2026-05-12_19-09-31.mp4?alt=media&token=a9856dbc-f410-464f-a11e-e8bc12344c77" type="video/mp4" />

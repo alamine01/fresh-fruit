@@ -48,7 +48,7 @@ export default function AboutPage() {
                         </div>
                     </motion.div>
                     <motion.div className={styles.missionImage} {...fadeIn} transition={{ delay: 0.2 }}>
-                        <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800" alt="Agriculteurs locaux" />
+                        <img src="/jeunes-agriculteurs.png" alt="Jeunes agriculteurs sénégalais" />
                     </motion.div>
                 </div>
             </section>
