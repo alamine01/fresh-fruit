@@ -387,6 +387,13 @@
   border-top: 1px solid var(--border-color);
 }
 
+.impactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: center;
+}
+
 .badgeOrange {
   display: inline-block;
   padding: 0.5rem 1.2rem;
