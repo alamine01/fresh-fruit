@@ -79,36 +79,33 @@ export default function AdminDashboard() {
 
     // Mise à jour du graphique en fonction du filtre
     useEffect(() => {
-        if (allOrders.length === 0) return;
-
         const dailyRevenue: { [key: string]: number } = {};
         const now = new Date();
 
-        allOrders.forEach((data: any) => {
-            if (!data.createdAt) return;
-            const date = data.createdAt.toDate();
-            const rev = data.total || 0;
+        if (allOrders.length > 0) {
+            allOrders.forEach((data: any) => {
+                if (!data.createdAt) return;
+                const date = data.createdAt.toDate();
+                const rev = data.total || 0;
 
-            if (timeRange === "week") {
-                // 7 derniers jours
-                const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-                if (diffDays < 7) {
-                    const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
-                    dailyRevenue[dayName] = (dailyRevenue[dayName] || 0) + rev;
+                if (timeRange === "week") {
+                    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+                    if (diffDays < 7) {
+                        const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+                        dailyRevenue[dayName] = (dailyRevenue[dayName] || 0) + rev;
+                    }
+                } else if (timeRange === "month") {
+                    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+                    if (diffDays < 30) {
+                        const dayNum = date.getDate().toString();
+                        dailyRevenue[dayNum] = (dailyRevenue[dayNum] || 0) + rev;
+                    }
+                } else if (timeRange === "year") {
+                    const monthName = date.toLocaleDateString('fr-FR', { month: 'short' });
+                    dailyRevenue[monthName] = (dailyRevenue[monthName] || 0) + rev;
                 }
-            } else if (timeRange === "month") {
-                // 30 derniers jours (groupés par date)
-                const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-                if (diffDays < 30) {
-                    const dayNum = date.getDate().toString();
-                    dailyRevenue[dayNum] = (dailyRevenue[dayNum] || 0) + rev;
-                }
-            } else if (timeRange === "year") {
-                // 12 derniers mois
-                const monthName = date.toLocaleDateString('fr-FR', { month: 'short' });
-                dailyRevenue[monthName] = (dailyRevenue[monthName] || 0) + rev;
-            }
-        });
+            });
+        }
 
         const formattedChartData = Object.entries(dailyRevenue).map(([name, revenue]) => ({
             name,
