@@ -60,7 +60,7 @@ export default function Home() {
               className={styles.homeVideo}
               poster="/hero-fruit.jpg"
             >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-fresh-fruits-in-a-basket-4022-large.mp4" type="video/mp4" />
+              <source src="https://firebasestorage.googleapis.com/v0/b/fresh-fruit-3f64d.firebasestorage.app/o/fresh%20fruit.mp4?alt=media&token=35536189-830c-4e80-a92a-8e606f7d7a95" type="video/mp4" />
             </video>
             <div className={styles.videoOverlay}>
               <div className={styles.videoText}>
