@@ -220,7 +220,25 @@
   width: 100%;
 }
 
-.dropdown button:hover {
-  background: #f8f9fa;
-  color: var(--primary-green);
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.closeBtn:hover {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .hideMobile {
+    display: none !important;
+  }
+  
+  .table {
+    min-width: unset;
+  }
 }
