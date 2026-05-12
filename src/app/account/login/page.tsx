@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,7 +8,7 @@ import { Mail, Lock, User, LogIn, ArrowRight, Phone, MessageSquare, ChevronLeft 
 import Link from 'next/link';
 import styles from './Login.module.css';
 
-export default function LoginPage() {
+function LoginContent() {
     const { loginWithGoogle, loginWithEmail, loginWithPhone, saveUserToFirestore, user } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -276,5 +276,13 @@ export default function LoginPage() {
                 </footer>
             </motion.div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div style={{ padding: '5rem', textAlign: 'center' }}>Chargement...</div>}>
+            <LoginContent />
+        </Suspense>
     );
 }
