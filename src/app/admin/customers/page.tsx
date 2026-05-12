@@ -10,7 +10,7 @@ import {
     MoreVertical,
     Search
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminCustomers() {
     const [openMenu, setOpenMenu] = useState<number | null>(null);
