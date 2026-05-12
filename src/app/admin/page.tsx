@@ -27,44 +27,23 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<any[]>([]);
     const [chartData, setChartData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [timeRange, setTimeRange] = useState("week"); // week, month, year
+    const [allOrders, setAllOrders] = useState<any[]>([]);
 
     useEffect(() => {
         // 1. Récupérer les produits
         const unsubProducts = onSnapshot(collection(db, "products"), (snapshot) => {
             const productCount = snapshot.size;
             
-            // 2. Récupérer les commandes pour les ventes et le graphique
+            // 2. Récupérer les commandes
             const unsubOrders = onSnapshot(collection(db, "orders"), (orderSnap) => {
-                let totalRevenue = 0;
-                const dailyRevenue: { [key: string]: number } = {};
+                const orders = orderSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setAllOrders(orders);
                 
-                orderSnap.forEach(doc => {
-                    const data = doc.data();
-                    const rev = data.total || 0;
-                    totalRevenue += rev;
-
-                    // Préparation des données du graphique (7 derniers jours simplifiés)
-                    if (data.createdAt) {
-                        const date = data.createdAt.toDate().toLocaleDateString('fr-FR', { weekday: 'short' });
-                        dailyRevenue[date] = (dailyRevenue[date] || 0) + rev;
-                    }
+                let totalRevenue = 0;
+                orders.forEach((data: any) => {
+                    totalRevenue += (data.total || 0);
                 });
-
-                // Formater les données pour Recharts
-                const formattedChartData = Object.entries(dailyRevenue).map(([name, revenue]) => ({
-                    name,
-                    revenue
-                })).slice(-7);
-
-                setChartData(formattedChartData.length > 0 ? formattedChartData : [
-                    { name: 'Lun', revenue: 0 },
-                    { name: 'Mar', revenue: 0 },
-                    { name: 'Mer', revenue: 0 },
-                    { name: 'Jeu', revenue: 0 },
-                    { name: 'Ven', revenue: 0 },
-                    { name: 'Sam', revenue: 0 },
-                    { name: 'Dim', revenue: 0 },
-                ]);
 
                 setStats([
                     { 
@@ -83,7 +62,7 @@ export default function AdminDashboard() {
                     },
                     { 
                         label: "Commandes", 
-                        value: orderSnap.size.toString(), 
+                        value: orders.length.toString(), 
                         icon: TrendingUp, 
                         color: "#8E24AA",
                         trend: "Total transactions"
@@ -97,6 +76,55 @@ export default function AdminDashboard() {
 
         return () => unsubProducts();
     }, []);
+
+    // Mise à jour du graphique en fonction du filtre
+    useEffect(() => {
+        if (allOrders.length === 0) return;
+
+        const dailyRevenue: { [key: string]: number } = {};
+        const now = new Date();
+
+        allOrders.forEach((data: any) => {
+            if (!data.createdAt) return;
+            const date = data.createdAt.toDate();
+            const rev = data.total || 0;
+
+            if (timeRange === "week") {
+                // 7 derniers jours
+                const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+                if (diffDays < 7) {
+                    const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+                    dailyRevenue[dayName] = (dailyRevenue[dayName] || 0) + rev;
+                }
+            } else if (timeRange === "month") {
+                // 30 derniers jours (groupés par date)
+                const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+                if (diffDays < 30) {
+                    const dayNum = date.getDate().toString();
+                    dailyRevenue[dayNum] = (dailyRevenue[dayNum] || 0) + rev;
+                }
+            } else if (timeRange === "year") {
+                // 12 derniers mois
+                const monthName = date.toLocaleDateString('fr-FR', { month: 'short' });
+                dailyRevenue[monthName] = (dailyRevenue[monthName] || 0) + rev;
+            }
+        });
+
+        const formattedChartData = Object.entries(dailyRevenue).map(([name, revenue]) => ({
+            name,
+            revenue
+        }));
+
+        setChartData(formattedChartData.length > 0 ? formattedChartData : [
+            { name: 'Lun', revenue: 0 },
+            { name: 'Mar', revenue: 0 },
+            { name: 'Mer', revenue: 0 },
+            { name: 'Jeu', revenue: 0 },
+            { name: 'Ven', revenue: 0 },
+            { name: 'Sam', revenue: 0 },
+            { name: 'Dim', revenue: 0 },
+        ]);
+    }, [timeRange, allOrders]);
 
     return (
         <div className={styles.dashboard}>
@@ -145,9 +173,15 @@ export default function AdminDashboard() {
                         transition={{ delay: 0.4 }}
                     >
                         <div className={styles.chartHeader}>
-                            <h2>Revenus de la semaine</h2>
-                            <select className={styles.chartSelect}>
-                                <option>7 derniers jours</option>
+                            <h2>Revenus</h2>
+                            <select 
+                                className={styles.chartSelect} 
+                                value={timeRange}
+                                onChange={(e) => setTimeRange(e.target.value)}
+                            >
+                                <option value="week">7 derniers jours</option>
+                                <option value="month">30 derniers jours</option>
+                                <option value="year">12 derniers mois</option>
                             </select>
                         </div>
                         
