@@ -484,9 +484,22 @@
   }
   
   .videoOverlay {
-    background: rgba(0,0,0,0.4);
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
     text-align: center;
     justify-content: center;
-    padding: 2rem;
+    align-items: flex-end;
+    padding: 3rem 1.5rem;
+  }
+
+  .videoText h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .videoText p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    max-width: 300px;
+    margin: 0 auto;
   }
 }
