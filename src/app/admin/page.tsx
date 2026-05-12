@@ -126,7 +126,7 @@ export default function AdminDashboard() {
                             />
                             <Tooltip 
                                 contentStyle={{ borderRadius: '15px', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}
-                                formatter={(value: number) => [`${value.toLocaleString()} CFA`, 'Revenu']}
+                                formatter={(value: any) => [`${Number(value).toLocaleString()} CFA`, 'Revenu']}
                             />
                             <Area 
                                 type="monotone" 
