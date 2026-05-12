@@ -38,6 +38,7 @@ const Footer = () => {
                     <div className={styles.links}>
                         <h3>Explorer</h3>
                         <Link href="/shop" className={styles.link}>Boutique</Link>
+                        <Link href="/about" className={styles.link}>À Propos</Link>
                         <Link href="/contact" className={styles.link}>Contact</Link>
                     </div>
 

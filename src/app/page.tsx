@@ -42,6 +42,77 @@ export default function Home() {
     <div className={styles.page}>
       <Hero />
 
+      {/* Vidéo Publicitaire */}
+      <section className={styles.videoSection}>
+        <div className="container">
+          <motion.div 
+            className={styles.videoWrapper}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              className={styles.homeVideo}
+              poster="/hero-fruit.jpg"
+            >
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-fresh-fruits-in-a-basket-4022-large.mp4" type="video/mp4" />
+            </video>
+            <div className={styles.videoOverlay}>
+              <div className={styles.videoText}>
+                <h3>De l'arbre à votre table</h3>
+                <p>Découvrez la fraîcheur absolue sélectionnée par Fresh Fruit.</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Mission Impact Local */}
+      <section className={styles.impactSection}>
+        <div className="container">
+          <div className={styles.impactGrid}>
+            <motion.div 
+              className={styles.impactText}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className={styles.badge}>Notre Vision</span>
+              <h2>Boostons Ensemble nos Agriculteurs Locaux</h2>
+              <p>
+                Fresh Fruit s'engage pour la jeunesse agricole du Sénégal. En travaillant avec nos fournisseurs locaux, nous garantissons des produits sains et soutenons l'économie de nos régions.
+              </p>
+              <div className={styles.impactStats}>
+                <div className={styles.statItem}>
+                  <strong>+50</strong>
+                  <span>Agriculteurs partenaires</span>
+                </div>
+                <div className={styles.statItem}>
+                  <strong>3</strong>
+                  <span>Magasins à Dakar</span>
+                </div>
+              </div>
+              <Link href="/about" className="btn btn-primary">
+                En savoir plus sur notre vision
+              </Link>
+            </motion.div>
+            <motion.div 
+              className={styles.impactImage}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <img src="https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?auto=format&fit=crop&q=80&w=800" alt="Produits frais" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       <section className={styles.categories}>
         <div className="container">
           <motion.div

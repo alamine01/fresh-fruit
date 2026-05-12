@@ -1,0 +1,164 @@
+.aboutPage {
+    padding-bottom: 8rem;
+}
+
+.aboutHero {
+    padding: 8rem 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #fcfdfc, white);
+}
+
+.aboutHero h1 {
+    font-size: 3.5rem;
+    color: var(--foreground);
+    margin-bottom: 1.5rem;
+}
+
+.aboutHero p {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.missionGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    padding: 5rem 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--primary-green);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.missionText h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.missionText p {
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.points {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.point {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.point svg {
+    color: var(--primary-green);
+}
+
+.missionImage {
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    aspect-ratio: 1/1;
+}
+
+.missionImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.infraBg {
+    background-color: #fcfdfc;
+    padding: 8rem 0;
+    margin-top: 5rem;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.sectionHeader h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.sectionHeader p {
+    color: var(--text-muted);
+}
+
+.infraGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.infraCard {
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    text-align: center;
+    transition: var(--transition-smooth);
+}
+
+.infraCard:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(46, 125, 50, 0.2);
+}
+
+.iconCircle {
+    width: 60px;
+    height: 60px;
+    background: rgba(230, 81, 0, 0.1);
+    color: var(--primary-orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.infraCard h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.infraCard p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+@media (max-width: 968px) {
+    .missionGrid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .infraGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .aboutHero h1 {
+        font-size: 2.5rem;
+    }
+}
