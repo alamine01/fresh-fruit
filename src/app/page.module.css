@@ -320,3 +320,157 @@
     aspect-ratio: 4/3;
   }
 }
+
+/* Nouvelles Sections Redessinées */
+.videoSection {
+  padding: 4rem 0;
+  background: white;
+}
+
+.videoWrapper {
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  aspect-ratio: 21/9;
+  background: #000;
+}
+
+@media (max-width: 768px) {
+  .videoWrapper {
+    aspect-ratio: 16/9;
+  }
+}
+
+.homeVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+.videoOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  padding: 0 8%;
+  pointer-events: none;
+}
+
+.videoText {
+  color: white;
+  max-width: 600px;
+}
+
+.videoText h3 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1rem;
+  color: white;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.videoText p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.impactSection {
+  padding: 10rem 0;
+  background-color: #fcfdfc;
+  border-top: 1px solid var(--border-color);
+}
+
+.impactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: center;
+}
+
+.impactText h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.impactText p {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+.impactStats {
+  display: flex;
+  gap: 4rem;
+  margin-bottom: 3.5rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.statItem strong {
+  font-size: 3rem;
+  color: var(--primary-green);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statItem span {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.impactImage {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  aspect-ratio: 4/3;
+}
+
+.impactImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.impactImage:hover img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 968px) {
+  .impactGrid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 4rem;
+  }
+  
+  .impactStats {
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .impactImage {
+    order: -1;
+  }
+  
+  .videoOverlay {
+    background: rgba(0,0,0,0.4);
+    text-align: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+}
