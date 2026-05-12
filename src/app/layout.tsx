@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
+import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function RootLayout({
   children,
@@ -28,10 +29,9 @@ export default function RootLayout({
       <body className={inter.variable}>
         <AuthProvider>
           <CartProvider>
-            <Header />
-            <CartDrawer />
-            <main>{children}</main>
-            <Footer />
+            <ClientLayout>
+              {children}
+            </ClientLayout>
           </CartProvider>
         </AuthProvider>
       </body>

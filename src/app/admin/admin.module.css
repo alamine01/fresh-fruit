@@ -62,13 +62,24 @@
 .mainContent {
   flex: 1;
   margin-left: 280px;
-  padding: 2rem 4rem;
+  padding: 3rem 5%;
+  width: calc(100% - 280px);
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 240px;
+  }
+  .mainContent {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+  }
 }
 
 @media (max-width: 1024px) {
   .sidebar {
     width: 80px;
-    padding: 2rem 1rem;
+    padding: 2rem 0.5rem;
     align-items: center;
   }
   
@@ -76,14 +87,49 @@
     display: none;
   }
   
+  .logo {
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .navLink {
+    justify-content: center;
+    padding: 1.2rem;
+  }
+  
   .mainContent {
     margin-left: 80px;
+    width: calc(100% - 80px);
+    padding: 2rem;
   }
 }
 
 @media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+  }
   .mainContent {
-    padding: 2rem;
+    margin-left: 60px;
+    width: calc(100% - 60px);
+    padding: 1.5rem;
+  }
+  
+  .dashboardHeader h1 {
+    font-size: 1.8rem;
+  }
+  
+  .statCard {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+  
+  .iconBox {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .statValue {
+    font-size: 1.4rem;
   }
 }
 
