@@ -491,8 +491,8 @@
   }
 
   .impactImage {
-    order: -1;
     border-radius: 25px;
+    margin-top: 2rem;
   }
   
   .videoOverlay {
