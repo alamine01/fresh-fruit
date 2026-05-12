@@ -1,7 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../products/products.module.css";
+import { db } from "@/lib/firebase";
+import { 
+    collection, 
+    onSnapshot, 
+    doc, 
+    updateDoc, 
+    query, 
+    orderBy 
+} from "firebase/firestore";
 import { 
     ShoppingBag, 
     Clock, 
@@ -13,32 +22,31 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminOrders() {
-    const [orders, setOrders] = useState([
-        { 
-            id: "#ORD-9921", 
-            customer: "Moussa Diop", 
-            date: "12 Mai 2024", 
-            total: 15500, 
-            status: "En attente",
-            items: "3x Pommes, 1x Jus Orange"
-        },
-        { 
-            id: "#ORD-9920", 
-            customer: "Fatou Sow", 
-            date: "12 Mai 2024", 
-            total: 3500, 
-            status: "En préparation",
-            items: "1x Panier Mixte"
-        },
-        { 
-            id: "#ORD-9919", 
-            customer: "Ibrahima Fall", 
-            date: "11 Mai 2024", 
-            total: 25000, 
-            status: "Livré",
-            items: "5x Bananes, 2x Mangues Kent"
-        },
-    ]);
+    const [orders, setOrders] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedOrder, setSelectedOrder] = useState<any>(null);
+
+    // Synchronisation en temps réel avec Firestore
+    useEffect(() => {
+        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const ordersData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                // Formatage de la date si c'est un Timestamp Firebase
+                date: doc.data().createdAt?.toDate ? 
+                      doc.data().createdAt.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 
+                      "Date inconnue"
+            }));
+            setOrders(ordersData);
+            setLoading(false);
+        }, (error) => {
+            console.error("Erreur Firestore:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -50,13 +58,15 @@ export default function AdminOrders() {
         }
     };
 
-    const updateStatus = (orderId: string, newStatus: string) => {
-        setOrders(orders.map(order => 
-            order.id === orderId ? { ...order, status: newStatus } : order
-        ));
+    const updateStatus = async (orderId: string, newStatus: string) => {
+        try {
+            const orderRef = doc(db, "orders", orderId);
+            await updateDoc(orderRef, { status: newStatus });
+        } catch (error) {
+            console.error("Erreur mise à jour statut:", error);
+            alert("Erreur lors de la mise à jour du statut");
+        }
     };
-
-    const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
     return (
         <div className={styles.productPage}>
@@ -68,56 +78,67 @@ export default function AdminOrders() {
             </header>
 
             <div className={styles.tableContainer}>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th>Client</th>
-                            <th className={styles.hideMobile}>Total</th>
-                            <th>Statut</th>
-                            <th>Détails</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map((order, i) => (
-                            <motion.tr 
-                                key={order.id}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                            >
-                                <td>
-                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span style={{ fontWeight: 700 }}>{order.customer}</span>
-                                        <span className={styles.hideMobile} style={{ fontSize: '0.8rem', color: '#888' }}>{order.items}</span>
-                                    </div>
-                                </td>
-                                <td className={styles.hideMobile}><span className={styles.priceTag}>{order.total.toLocaleString()} CFA</span></td>
-                                <td>
-                                    <span style={{ 
-                                        padding: '0.4rem 0.8rem', 
-                                        borderRadius: '20px', 
-                                        fontSize: '0.75rem', 
-                                        fontWeight: 700, 
-                                        backgroundColor: `${getStatusColor(order.status)}15`,
-                                        color: getStatusColor(order.status),
-                                        border: `1px solid ${getStatusColor(order.status)}30`
-                                    }}>
-                                        {order.status}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button 
-                                        className={styles.actionBtn} 
-                                        style={{ backgroundColor: 'var(--primary-green)', color: 'white' }}
-                                        onClick={() => setSelectedOrder(order)}
-                                    >
-                                        <ChevronDown size={18} />
-                                    </button>
-                                </td>
-                            </motion.tr>
-                        ))}
-                    </tbody>
-                </table>
+                {loading ? (
+                    <div style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>
+                        Chargement des commandes...
+                    </div>
+                ) : orders.length === 0 ? (
+                    <div style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>
+                        <ShoppingBag size={48} style={{ marginBottom: '1rem', opacity: 0.2 }} />
+                        <p>Aucune commande pour le moment.</p>
+                    </div>
+                ) : (
+                    <table className={styles.table}>
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th className={styles.hideMobile}>Total</th>
+                                <th>Statut</th>
+                                <th>Détails</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders.map((order, i) => (
+                                <motion.tr 
+                                    key={order.id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                >
+                                    <td>
+                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span style={{ fontWeight: 700 }}>{order.customerName || "Anonyme"}</span>
+                                            <span className={styles.hideMobile} style={{ fontSize: '0.8rem', color: '#888' }}>{order.itemsSummary || "Détails indisponibles"}</span>
+                                        </div>
+                                    </td>
+                                    <td className={styles.hideMobile}><span className={styles.priceTag}>{order.total?.toLocaleString() || 0} CFA</span></td>
+                                    <td>
+                                        <span style={{ 
+                                            padding: '0.4rem 0.8rem', 
+                                            borderRadius: '20px', 
+                                            fontSize: '0.75rem', 
+                                            fontWeight: 700, 
+                                            backgroundColor: `${getStatusColor(order.status)}15`,
+                                            color: getStatusColor(order.status),
+                                            border: `1px solid ${getStatusColor(order.status)}30`
+                                        }}>
+                                            {order.status || "En attente"}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button 
+                                            className={styles.actionBtn} 
+                                            style={{ backgroundColor: 'var(--primary-green)', color: 'white' }}
+                                            onClick={() => setSelectedOrder(order)}
+                                        >
+                                            <ChevronDown size={18} />
+                                        </button>
+                                    </td>
+                                </motion.tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
 
             {/* Order Detail Modal */}
