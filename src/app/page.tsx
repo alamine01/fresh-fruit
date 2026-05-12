@@ -196,7 +196,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800" alt="Étal de fruits frais" />
+              <img src="/fruits-frais.png" alt="Étal de fruits tropicaux frais" />
             </motion.div>
           </motion.div>
         </div>
