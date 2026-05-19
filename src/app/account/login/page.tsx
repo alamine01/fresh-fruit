@@ -77,9 +77,22 @@ function LoginContent() {
         setError("");
 
         try {
-            let phoneNumber = formData.phone;
+            let phoneNumber = formData.phone.trim().replace(/\s/g, '');
+            
+            if (phoneNumber.startsWith('00')) {
+                phoneNumber = '+' + phoneNumber.substring(2);
+            }
+            
             if (!phoneNumber.startsWith('+')) {
-                phoneNumber = '+221' + phoneNumber.replace(/\s/g, '');
+                if (phoneNumber.startsWith('0')) {
+                    if (phoneNumber.length === 10 && (phoneNumber.startsWith('06') || phoneNumber.startsWith('07'))) {
+                        phoneNumber = '+33' + phoneNumber.substring(1);
+                    } else {
+                        phoneNumber = '+221' + phoneNumber.substring(1);
+                    }
+                } else {
+                    phoneNumber = '+221' + phoneNumber;
+                }
             }
 
             const result = await loginWithPhone(phoneNumber, 'recaptcha-container');
