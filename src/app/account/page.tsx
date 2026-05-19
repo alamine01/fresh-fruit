@@ -15,27 +15,84 @@ import {
     Apple,
     ArrowLeft,
     CreditCard,
-    ShoppingBag
+    ShoppingBag,
+    Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 import styles from './Account.module.css';
-
-const orders = [
-    { id: 'ORD-1234', date: '10 Fév 2026', total: '53.50', status: 'Livré', statusColor: '#4CAF50' },
-    { id: 'ORD-5678', date: '15 Fév 2026', total: '12.00', status: 'En préparation', statusColor: '#FF9800' }
-];
+import { db } from '@/lib/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function AccountPage() {
     const { user, loading, logout } = useAuth();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'orders' | 'profile'>('orders');
-    const [selectedOrder, setSelectedOrder] = useState<typeof orders[0] | null>(null);
+    const [userOrders, setUserOrders] = useState<any[]>([]);
+    const [loadingOrders, setLoadingOrders] = useState(true);
+    const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
     useEffect(() => {
         if (!loading && !user) {
             router.push('/account/login');
         }
     }, [user, loading, router]);
+
+    useEffect(() => {
+        if (user) {
+            const fetchOrders = async () => {
+                setLoadingOrders(true);
+                try {
+                    const q = query(
+                        collection(db, "orders"),
+                        where("userId", "==", user.uid)
+                    );
+                    const querySnapshot = await getDocs(q);
+                    const ordersList = querySnapshot.docs.map(doc => {
+                        const data = doc.data();
+                        
+                        // Formater la date proprement
+                        let formattedDate = "Récemment";
+                        if (data.createdAt) {
+                            const dateObj = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+                            formattedDate = dateObj.toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric'
+                            });
+                        }
+
+                        // Couleur du badge de statut
+                        let statusColor = "#FF9800"; // En attente / orange
+                        if (data.status === "Livré") statusColor = "#4CAF50"; // Vert
+                        if (data.status === "Annulé") statusColor = "#F44336"; // Rouge
+                        if (data.status === "En cours") statusColor = "#2196F3"; // Bleu
+
+                        return {
+                            id: doc.id,
+                            date: formattedDate,
+                            total: Number(data.total || 0).toLocaleString() + " CFA",
+                            status: data.status || "En attente",
+                            statusColor: statusColor,
+                            items: data.items || [],
+                            paymentMethod: data.paymentMethod || "cod",
+                            paymentStatus: data.paymentStatus || "En attente",
+                            customer: data.customer || {}
+                        };
+                    });
+                    
+                    // Trier par date/id décroissante (plus récent d'abord)
+                    ordersList.sort((a, b) => b.id.localeCompare(a.id));
+                    
+                    setUserOrders(ordersList);
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des commandes :", error);
+                } finally {
+                    setLoadingOrders(false);
+                }
+            };
+            fetchOrders();
+        }
+    }, [user]);
 
     if (loading || !user) {
         return <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
@@ -109,41 +166,56 @@ export default function AccountPage() {
                         >
                             <h2>Historique de vos commandes</h2>
 
-                            <div className={styles.tableContainer}>
-                                <table className={styles.table}>
-                                    <thead>
-                                        <tr>
-                                            <th>N° Commande</th>
-                                            <th>Date</th>
-                                            <th>Total</th>
-                                            <th>Statut</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {orders.map((order) => (
-                                            <tr key={order.id}>
-                                                <td><span className={styles.orderId}>{order.id}</span></td>
-                                                <td>{order.date}</td>
-                                                <td><span className={styles.total}>{order.total} CFA</span></td>
-                                                <td>
-                                                    <span
-                                                        className={styles.statusBadge}
-                                                        style={{ backgroundColor: `${order.statusColor}15`, color: order.statusColor }}
-                                                    >
-                                                        {order.status}
-                                                    </span>
-                                                </td>
-                                                <td style={{ textAlign: 'right' }}>
-                                                    <button className={styles.viewBtn} onClick={() => setSelectedOrder(order)}>
-                                                        Détails <ChevronRight size={16} />
-                                                    </button>
-                                                </td>
+                            {loadingOrders ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '5rem' }}>
+                                    <Loader2 className="animate-spin" size={40} style={{ color: 'var(--primary-green)' }} />
+                                    <p style={{ marginTop: '1rem', color: '#666' }}>Chargement de vos commandes...</p>
+                                </div>
+                            ) : userOrders.length > 0 ? (
+                                <div className={styles.tableContainer}>
+                                    <table className={styles.table}>
+                                        <thead>
+                                            <tr>
+                                                <th>N° Commande</th>
+                                                <th>Date</th>
+                                                <th>Total</th>
+                                                <th>Statut</th>
+                                                <th></th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            {userOrders.map((order) => (
+                                                <tr key={order.id}>
+                                                    <td><span className={styles.orderId}>{order.id}</span></td>
+                                                    <td>{order.date}</td>
+                                                    <td><span className={styles.total}>{order.total}</span></td>
+                                                    <td>
+                                                        <span
+                                                            className={styles.statusBadge}
+                                                            style={{ backgroundColor: `${order.statusColor}15`, color: order.statusColor }}
+                                                        >
+                                                            {order.status}
+                                                        </span>
+                                                    </td>
+                                                    <td style={{ textAlign: 'right' }}>
+                                                        <button className={styles.viewBtn} onClick={() => setSelectedOrder(order)}>
+                                                            Détails <ChevronRight size={16} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div style={{ textAlign: 'center', padding: '5rem 2rem', background: '#fcfcfc', borderRadius: '20px', border: '1px solid #f0f0f0' }}>
+                                    <ShoppingBag size={48} style={{ color: '#ccc', marginBottom: '1rem' }} />
+                                    <p style={{ color: '#666', fontSize: '1.1rem', marginBottom: '1.5rem' }}>Vous n'avez pas encore passé de commande.</p>
+                                    <Link href="/shop" className="btn btn-primary">
+                                        Commencer mes achats
+                                    </Link>
+                                </div>
+                            )}
                         </motion.section>
                     )}
 
@@ -170,13 +242,43 @@ export default function AccountPage() {
                                 <div style={{ background: '#fcfcfc', padding: '2rem', borderRadius: '20px', border: '1px solid #f0f0f0' }}>
                                     <h3 style={{ fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}><Clock size={18} /> Infos générales</h3>
                                     <p style={{ margin: '0.5rem 0' }}><strong>Date :</strong> {selectedOrder.date}</p>
-                                    <p style={{ margin: '0.5rem 0' }}><strong>Total :</strong> {selectedOrder.total} CFA</p>
-                                    <p style={{ margin: '0.5rem 0', display: 'flex', alignItems: 'center', gap: '5px' }}><CreditCard size={14} /> Payé par Wave</p>
+                                    <p style={{ margin: '0.5rem 0' }}><strong>Total :</strong> {selectedOrder.total}</p>
+                                    <p style={{ margin: '0.5rem 0', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        <CreditCard size={14} /> 
+                                        {selectedOrder.paymentMethod === "stripe" ? "Payé par Carte Bancaire" : 
+                                         selectedOrder.paymentMethod === "wave" ? "Payé par Wave" : 
+                                         selectedOrder.paymentMethod === "om" ? "Payé par Orange Money" : 
+                                         "Paiement à la livraison"}
+                                        <span style={{ fontSize: '0.85rem', color: selectedOrder.paymentStatus === 'Payé' ? 'var(--primary-green)' : '#FF9800', fontWeight: 'bold', marginLeft: '5px' }}>
+                                            ({selectedOrder.paymentStatus === 'Payé' ? 'Payé' : 'Non payé'})
+                                        </span>
+                                    </p>
                                 </div>
                                 <div style={{ background: '#fcfcfc', padding: '2rem', borderRadius: '20px', border: '1px solid #f0f0f0' }}>
                                     <h3 style={{ fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}><Truck size={18} /> Livraison</h3>
-                                    <p style={{ margin: '0.5rem 0' }}>Expédition en cours</p>
-                                    <p style={{ margin: '0.5rem 0' }}><strong>Code de suivi :</strong> FF-SEN-0092</p>
+                                    <p style={{ margin: '0.5rem 0' }}><strong>Destinataire :</strong> {selectedOrder.customer?.firstName} {selectedOrder.customer?.lastName}</p>
+                                    <p style={{ margin: '0.5rem 0' }}><strong>Adresse :</strong> {selectedOrder.customer?.address || "Non renseignée"}</p>
+                                    <p style={{ margin: '0.5rem 0' }}><strong>Quartier :</strong> {selectedOrder.customer?.neighborhood ? selectedOrder.customer.neighborhood.toUpperCase() : "Non renseigné"}</p>
+                                    <p style={{ margin: '0.5rem 0' }}><strong>Téléphone :</strong> {selectedOrder.customer?.phone || "Non renseigné"}</p>
+                                </div>
+                            </div>
+
+                            {/* Liste des articles commandés */}
+                            <div style={{ marginTop: '2.5rem', background: '#fcfcfc', padding: '2rem', borderRadius: '20px', border: '1px solid #f0f0f0' }}>
+                                <h3 style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}>Articles commandés</h3>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {selectedOrder.items?.map((item: any, idx: number) => (
+                                        <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: idx < selectedOrder.items.length - 1 ? '1px solid #eee' : 'none' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                {item.image && <img src={item.image} alt={item.name} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '10px' }} />}
+                                                <div>
+                                                    <h4 style={{ margin: 0, fontSize: '0.95rem' }}>{item.name}</h4>
+                                                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.85rem', color: '#666' }}>{item.quantity} x {Number(item.price || 0).toLocaleString()} CFA</p>
+                                                </div>
+                                            </div>
+                                            <span style={{ fontWeight: 'bold' }}>{(item.price * item.quantity).toLocaleString()} CFA</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </motion.section>

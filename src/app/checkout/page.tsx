@@ -66,7 +66,8 @@ export default function CheckoutPage() {
                     total: totalPrice,
                     customer: formData,
                     paymentMethod: paymentMethod, // 'wave' ou 'om'
-                    paymentStatus: "Non payé"
+                    paymentStatus: "Non payé",
+                    userId: user?.uid || null
                 });
 
                 if (localOrder.success && localOrder.orderId) {
@@ -92,7 +93,8 @@ export default function CheckoutPage() {
                     items: cart,
                     total: totalPrice,
                     customer: formData,
-                    paymentMethod: "cod"
+                    paymentMethod: "cod",
+                    userId: user?.uid || null
                 });
                 
                 if (result.success) {
