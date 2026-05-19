@@ -31,15 +31,13 @@ export default function AdminDashboard() {
     const [allOrders, setAllOrders] = useState<any[]>([]);
 
     useEffect(() => {
-        // 1. Récupérer les produits
-        const unsubProducts = onSnapshot(collection(db, "products"), (snapshot) => {
-            const productCount = snapshot.size;
-            
-            // 2. Récupérer les commandes
-            const unsubOrders = onSnapshot(collection(db, "orders"), (orderSnap) => {
-                const orders = orderSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setAllOrders(orders);
-                
+        let productCount = 0;
+        let orders: any[] = [];
+        let productsLoaded = false;
+        let ordersLoaded = false;
+
+        const checkLoaded = () => {
+            if (productsLoaded && ordersLoaded) {
                 let totalRevenue = 0;
                 orders.forEach((data: any) => {
                     if (data.paymentStatus === 'Payé') {
@@ -71,12 +69,36 @@ export default function AdminDashboard() {
                     }
                 ]);
                 setLoading(false);
-            });
+            }
+        };
 
-            return () => unsubOrders();
+        // 1. Récupérer les produits
+        const unsubProducts = onSnapshot(collection(db, "products"), (snapshot) => {
+            productCount = snapshot.size;
+            productsLoaded = true;
+            checkLoaded();
+        }, (error) => {
+            console.error("Erreur lors de la récupération des produits:", error);
+            productsLoaded = true; // Débloque le chargement en cas d'erreur
+            checkLoaded();
         });
 
-        return () => unsubProducts();
+        // 2. Récupérer les commandes
+        const unsubOrders = onSnapshot(collection(db, "orders"), (orderSnap) => {
+            orders = orderSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setAllOrders(orders);
+            ordersLoaded = true;
+            checkLoaded();
+        }, (error) => {
+            console.error("Erreur lors de la récupération des commandes:", error);
+            ordersLoaded = true; // Débloque le chargement en cas d'erreur
+            checkLoaded();
+        });
+
+        return () => {
+            unsubProducts();
+            unsubOrders();
+        };
     }, []);
 
     // Mise à jour du graphique en fonction du filtre
