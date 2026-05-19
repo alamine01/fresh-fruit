@@ -60,18 +60,31 @@ export default function CheckoutPage() {
                 }
             } else if (paymentMethod === "wave" || paymentMethod === "om") {
                 // Paiement via PayTech (Wave / OM)
-                const orderId = "FF-" + Math.random().toString(36).substr(2, 6).toUpperCase();
-                const result = await createPayTechPayment({
+                // 1. Créer d'abord la commande en base avec le statut "Non payé"
+                const localOrder = await createLocalOrder({
+                    items: cart,
                     total: totalPrice,
-                    orderId: orderId,
                     customer: formData,
-                    origin: window.location.origin
-                }, paymentMethod);
-                
-                if (result.success && result.redirect_url) {
-                    window.location.href = result.redirect_url;
+                    paymentMethod: paymentMethod, // 'wave' ou 'om'
+                    paymentStatus: "Non payé"
+                });
+
+                if (localOrder.success && localOrder.orderId) {
+                    const result = await createPayTechPayment({
+                        total: totalPrice,
+                        orderId: localOrder.orderId,
+                        customer: formData,
+                        origin: window.location.origin
+                    }, paymentMethod);
+                    
+                    if (result.success && result.redirect_url) {
+                        clearCart();
+                        window.location.href = result.redirect_url;
+                    } else {
+                        alert(result.message || "Erreur lors de la redirection vers PayTech.");
+                    }
                 } else {
-                    alert(result.message || "Erreur lors de la redirection vers PayTech.");
+                    alert("Erreur lors de l'enregistrement de la commande.");
                 }
             } else {
                 // Paiement à la livraison

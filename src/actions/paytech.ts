@@ -22,7 +22,7 @@ export async function createPayTechPayment(orderData: any, paymentMethod: string
                 command_name: "Paiement de la commande #" + orderData.orderId,
                 env: "prod",
                 target_payment: paymentMethod === 'wave' ? 'Wave' : (paymentMethod === 'om' ? 'Orange Money' : null),
-                success_url: orderData.origin + "/checkout/success",
+                success_url: `${orderData.origin}/checkout/success?order_id=${orderData.orderId}`,
                 cancel_url: orderData.origin + "/checkout/cancel",
                 ipn_url: orderData.origin + "/api/webhooks/paytech",
                 custom_field: JSON.stringify(orderData.customer)
