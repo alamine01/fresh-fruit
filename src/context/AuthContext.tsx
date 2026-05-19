@@ -103,11 +103,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const container = document.getElementById(recaptchaContainerId);
             if (container) container.innerHTML = ""; // Nettoyer pour éviter l'erreur "already rendered"
 
-            const recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainerId, {
+            if ((window as any).recaptchaVerifier) {
+                try {
+                    (window as any).recaptchaVerifier.clear();
+                } catch (e) {
+                    console.log("Error clearing recaptcha:", e);
+                }
+                (window as any).recaptchaVerifier = null;
+            }
+
+            (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainerId, {
                 size: 'invisible'
             });
-            return await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
+
+            return await signInWithPhoneNumber(auth, phoneNumber, (window as any).recaptchaVerifier);
         } catch (error) {
+            if ((window as any).recaptchaVerifier) {
+                try {
+                    (window as any).recaptchaVerifier.clear();
+                } catch (e) {}
+                (window as any).recaptchaVerifier = null;
+            }
             throw error;
         }
     };
