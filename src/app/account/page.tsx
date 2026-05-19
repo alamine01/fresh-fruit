@@ -22,14 +22,42 @@ import Link from 'next/link';
 import styles from './Account.module.css';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 
 export default function AccountPage() {
-    const { user, loading, logout } = useAuth();
+    const { user, loading, logout, saveUserToFirestore } = useAuth();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'orders' | 'profile'>('orders');
     const [userOrders, setUserOrders] = useState<any[]>([]);
     const [loadingOrders, setLoadingOrders] = useState(true);
     const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+
+    // États pour l'édition du nom complet
+    const [isEditing, setIsEditing] = useState(false);
+    const [newName, setNewName] = useState("");
+    const [updatingName, setUpdatingName] = useState(false);
+
+    // Mettre à jour newName si user.displayName change
+    useEffect(() => {
+        if (user) {
+            setNewName(user.displayName || "");
+        }
+    }, [user]);
+
+    const handleSaveName = async () => {
+        if (!newName.trim() || !user) return;
+        setUpdatingName(true);
+        try {
+            await updateProfile(user, { displayName: newName.trim() });
+            await saveUserToFirestore(user, { name: newName.trim() });
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du nom :", error);
+            alert("Une erreur est survenue lors de la mise à jour du nom.");
+        } finally {
+            setUpdatingName(false);
+        }
+    };
 
     useEffect(() => {
         if (!loading && !user) {
@@ -304,7 +332,61 @@ export default function AccountPage() {
                                 <div className={styles.profileInfo}>
                                     <div className={styles.infoGroup}>
                                         <label>Nom Complet</label>
-                                        <p>{user.displayName || "Non renseigné"}</p>
+                                        {isEditing ? (
+                                            <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
+                                                <input
+                                                    type="text"
+                                                    value={newName}
+                                                    onChange={(e) => setNewName(e.target.value)}
+                                                    style={{
+                                                        padding: '0.6rem 1rem',
+                                                        borderRadius: '10px',
+                                                        border: '1px solid #ccc',
+                                                        fontSize: '0.95rem',
+                                                        flex: 1,
+                                                        outline: 'none'
+                                                    }}
+                                                    placeholder="Votre nom complet"
+                                                    disabled={updatingName}
+                                                />
+                                                <button
+                                                    onClick={handleSaveName}
+                                                    disabled={updatingName || !newName.trim()}
+                                                    className="btn btn-primary"
+                                                    style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem' }}
+                                                >
+                                                    {updatingName ? "..." : "Enregistrer"}
+                                                </button>
+                                                <button
+                                                    onClick={() => { setIsEditing(false); setNewName(user.displayName || ""); }}
+                                                    disabled={updatingName}
+                                                    className="btn btn-secondary"
+                                                    style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', background: '#eee', color: '#333' }}
+                                                >
+                                                    Annuler
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                <p style={{ margin: 0 }}>{user.displayName || "Non renseigné"}</p>
+                                                <button
+                                                    onClick={() => setIsEditing(true)}
+                                                    style={{
+                                                        background: 'none',
+                                                        border: 'none',
+                                                        color: 'var(--primary-green)',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: 'bold',
+                                                        padding: '5px 10px',
+                                                        borderRadius: '5px',
+                                                        backgroundColor: 'var(--primary-green-light)',
+                                                    }}
+                                                >
+                                                    Modifier
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className={styles.infoGroup}>
                                         <label>Email / Contact</label>
