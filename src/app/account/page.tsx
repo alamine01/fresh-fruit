@@ -78,14 +78,17 @@ export default function AccountPage() {
                     const ordersList = querySnapshot.docs.map(doc => {
                         const data = doc.data();
                         
-                        // Formater la date proprement
+                        // Formater la date proprement avec l'heure exacte
                         let formattedDate = "Récemment";
                         if (data.createdAt) {
                             const dateObj = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
                             formattedDate = dateObj.toLocaleDateString('fr-FR', {
                                 day: 'numeric',
-                                month: 'short',
+                                month: 'long',
                                 year: 'numeric'
+                            }) + " à " + dateObj.toLocaleTimeString('fr-FR', {
+                                hour: '2-digit',
+                                minute: '2-digit'
                             });
                         }
 

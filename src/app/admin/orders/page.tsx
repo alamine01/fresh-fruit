@@ -35,13 +35,26 @@ export default function AdminOrders() {
     useEffect(() => {
         const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const ordersData = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                date: doc.data().createdAt?.toDate ? 
-                      doc.data().createdAt.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 
-                      "Date inconnue"
-            }));
+            const ordersData = snapshot.docs.map(doc => {
+                const data = doc.data();
+                let formattedDate = "Date inconnue";
+                if (data.createdAt) {
+                    const dateObj = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+                    formattedDate = dateObj.toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    }) + " à " + dateObj.toLocaleTimeString('fr-FR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+                return {
+                    id: doc.id,
+                    ...data,
+                    date: formattedDate
+                };
+            });
             setOrders(ordersData);
             setLoading(false);
         }, (error) => {
