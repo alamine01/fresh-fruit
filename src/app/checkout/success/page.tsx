@@ -53,7 +53,7 @@ function SuccessContent() {
                     : "Votre paiement a été accepté. Vous recevrez un email de confirmation sous peu."
                 }
             </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+            <div className={styles.actionButtons}>
                 <Link href="/shop" className="btn btn-primary">
                     Continuer mes achats
                 </Link>
