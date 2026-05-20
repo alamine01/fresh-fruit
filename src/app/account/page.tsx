@@ -220,10 +220,10 @@ export default function AccountPage() {
                                         <tbody>
                                             {userOrders.map((order) => (
                                                 <tr key={order.id}>
-                                                    <td><span className={styles.orderId}>{order.orderNumber || `#${order.id.slice(-6).toUpperCase()}`}</span></td>
-                                                    <td>{order.date}</td>
-                                                    <td><span className={styles.total}>{order.total}</span></td>
-                                                    <td>
+                                                    <td data-label="N° Commande"><span className={styles.orderId}>{order.orderNumber || `#${order.id.slice(-6).toUpperCase()}`}</span></td>
+                                                    <td data-label="Date">{order.date}</td>
+                                                    <td data-label="Total"><span className={styles.total}>{order.total}</span></td>
+                                                    <td data-label="Statut">
                                                         <span
                                                             className={styles.statusBadge}
                                                             style={{ backgroundColor: `${order.statusColor}15`, color: order.statusColor }}
@@ -231,7 +231,7 @@ export default function AccountPage() {
                                                             {order.status}
                                                         </span>
                                                     </td>
-                                                    <td style={{ textAlign: 'right' }}>
+                                                    <td data-label="" style={{ textAlign: 'right' }}>
                                                         <button className={styles.viewBtn} onClick={() => setSelectedOrder(order)}>
                                                             Détails <ChevronRight size={16} />
                                                         </button>
@@ -265,8 +265,8 @@ export default function AccountPage() {
                                 <ArrowLeft size={16} /> Retour à la liste
                             </button>
                             
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                                <h2>Détails de la commande {selectedOrder.orderNumber || `#${selectedOrder.id.slice(-6).toUpperCase()}`}</h2>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '3rem' }}>
+                                <h2 style={{ margin: 0 }}>Détails de la commande {selectedOrder.orderNumber || `#${selectedOrder.id.slice(-6).toUpperCase()}`}</h2>
                                 <span className={styles.statusBadge} style={{ backgroundColor: `${selectedOrder.statusColor}15`, color: selectedOrder.statusColor }}>
                                     {selectedOrder.status}
                                 </span>
@@ -339,7 +339,7 @@ export default function AccountPage() {
                                     <div className={styles.infoGroup}>
                                         <label>Nom Complet</label>
                                         {isEditing ? (
-                                            <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '5px' }}>
                                                 <input
                                                     type="text"
                                                     value={newName}
@@ -350,6 +350,7 @@ export default function AccountPage() {
                                                         border: '1px solid #ccc',
                                                         fontSize: '0.95rem',
                                                         flex: 1,
+                                                        minWidth: '200px',
                                                         outline: 'none'
                                                     }}
                                                     placeholder="Votre nom complet"
@@ -359,7 +360,7 @@ export default function AccountPage() {
                                                     onClick={handleSaveName}
                                                     disabled={updatingName || !newName.trim()}
                                                     className="btn btn-primary"
-                                                    style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem' }}
+                                                    style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', flex: 1 }}
                                                 >
                                                     {updatingName ? "..." : "Enregistrer"}
                                                 </button>
@@ -367,7 +368,7 @@ export default function AccountPage() {
                                                     onClick={() => { setIsEditing(false); setNewName(user.displayName || ""); }}
                                                     disabled={updatingName}
                                                     className="btn btn-secondary"
-                                                    style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', background: '#eee', color: '#333' }}
+                                                    style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', background: '#eee', color: '#333', flex: 1 }}
                                                 >
                                                     Annuler
                                                 </button>

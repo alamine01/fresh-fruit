@@ -242,19 +242,70 @@
     .mainContent {
         margin-left: 0;
         width: 100%;
-        padding: 1.5rem;
-        padding-top: 5rem;
+        padding: 1.2rem;
+        padding-top: 5.5rem;
         padding-bottom: 6rem;
     }
+    .header {
+        margin-bottom: 2rem;
+    }
     .header h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
     .section {
-        padding: 1.5rem;
+        padding: 1.2rem;
+        border-radius: 20px;
     }
     .profileContent {
         flex-direction: column;
         text-align: center;
+        gap: 1.5rem;
+    }
+    .profileAvatar {
+        margin: 0 auto;
+    }
+    
+    /* Transform table into cards on mobile */
+    .table thead {
+        display: none;
+    }
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+    .table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+    .table td {
+        padding: 0.6rem 0;
+        border-bottom: 1px solid #f8f8f8;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+    }
+    .table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-top: 0.5rem;
+    }
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #888;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-align: left;
+        flex: 1;
+    }
+    .viewBtn {
+        width: 100%;
+        justify-content: center;
     }
 }
 
