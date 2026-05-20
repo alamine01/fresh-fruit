@@ -216,7 +216,12 @@ export default function AdminOrders() {
                                         >
                                             <td>
                                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                    <span style={{ fontWeight: 700 }}>{order.customerName || (order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : "Anonyme")}</span>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                                                        <span style={{ fontWeight: 700 }}>{order.customerName || (order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : "Anonyme")}</span>
+                                                        <span style={{ fontSize: '0.75rem', fontWeight: 800, background: 'rgba(46, 125, 50, 0.1)', color: 'var(--primary-green)', padding: '0.15rem 0.5rem', borderRadius: '6px' }}>
+                                                            {order.orderNumber || `#${order.id.slice(-6).toUpperCase()}`}
+                                                        </span>
+                                                    </div>
                                                     <span className={styles.hideMobile} style={{ fontSize: '0.8rem', color: '#888' }}>{order.itemsSummary || "Détails indisponibles"}</span>
                                                 </div>
                                             </td>
@@ -269,9 +274,19 @@ export default function AdminOrders() {
                             </div>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                <div style={{ background: '#f9f9f9', padding: '1.5rem', borderRadius: '15px' }}>
-                                    <p style={{ fontSize: '0.9rem', color: '#888' }}>ID Commande</p>
-                                    <p style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--primary-green)' }}>{selectedOrder.id}</p>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div style={{ background: '#f9f9f9', padding: '1.25rem', borderRadius: '15px' }}>
+                                        <p style={{ fontSize: '0.85rem', color: '#888', fontWeight: 600 }}>N° Commande</p>
+                                        <p style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--primary-orange)', marginTop: '0.2rem' }}>
+                                            {selectedOrder.orderNumber || `#${selectedOrder.id.slice(-6).toUpperCase()}`}
+                                        </p>
+                                    </div>
+                                    <div style={{ background: '#f9f9f9', padding: '1.25rem', borderRadius: '15px' }}>
+                                        <p style={{ fontSize: '0.85rem', color: '#888', fontWeight: 600 }}>ID Technique (Firebase)</p>
+                                        <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#666', marginTop: '0.5rem', wordBreak: 'break-all', fontFamily: 'monospace' }}>
+                                            {selectedOrder.id}
+                                        </p>
+                                    </div>
                                 </div>
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

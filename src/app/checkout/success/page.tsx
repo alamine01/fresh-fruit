@@ -13,6 +13,7 @@ function SuccessContent() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("order_id");
     const [isCod, setIsCod] = useState(false);
+    const [orderNumber, setOrderNumber] = useState("");
 
     useEffect(() => {
         clearCart();
@@ -24,6 +25,8 @@ function SuccessContent() {
                     const orderSnap = await getDoc(orderRef);
                     if (orderSnap.exists()) {
                         const orderData = orderSnap.data();
+                        setOrderNumber(orderData.orderNumber || `#${orderId.slice(-6).toUpperCase()}`);
+                        
                         if (orderData.paymentMethod === "cod") {
                             setIsCod(true);
                             console.log("Paiement à la livraison : laissé en statut Non payé.");
@@ -47,7 +50,25 @@ function SuccessContent() {
         <div className={`container ${styles.empty}`}>
             <span style={{ fontSize: '4rem' }}>{isCod ? "📦" : "🎉"}</span>
             <h1>Merci pour votre commande !</h1>
-            <p>
+            
+            {orderNumber && (
+                <div style={{ margin: '1.5rem 0' }}>
+                    <span style={{ 
+                        fontSize: '1.3rem', 
+                        fontWeight: 800, 
+                        color: 'var(--primary-green)', 
+                        background: 'rgba(46, 125, 50, 0.08)', 
+                        padding: '0.8rem 1.8rem', 
+                        borderRadius: '99px',
+                        display: 'inline-block',
+                        border: '1px dashed rgba(46, 125, 50, 0.2)'
+                    }}>
+                        N° Commande : {orderNumber}
+                    </span>
+                </div>
+            )}
+
+            <p style={{ maxWidth: '500px', margin: '0 auto 2rem auto' }}>
                 {isCod 
                     ? "Votre commande a été enregistrée avec succès. Vous réglerez le paiement en espèces lors de la livraison."
                     : "Votre paiement a été accepté. Vous recevrez un email de confirmation sous peu."

@@ -43,7 +43,7 @@ export async function createCheckoutSession(items: CartItem[]) {
 }
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { sendAdminOrderAlert } from "@/lib/email";
 
 export async function createLocalOrder(orderData: any) {
@@ -56,15 +56,43 @@ export async function createLocalOrder(orderData: any) {
             itemsSummary: orderData.items.map((it: any) => `${it.quantity}x ${it.name}`).join(", ")
         };
 
-        const docRef = await addDoc(collection(db, "orders"), orderToSave);
+        let orderNumber = "";
+        let docId = "";
+
+        await runTransaction(db, async (transaction) => {
+            const counterRef = doc(db, "counters", "orders");
+            const counterSnap = await transaction.get(counterRef);
+            
+            let nextSeq = 1001; // Départ séquentiel à 1001
+            if (counterSnap.exists()) {
+                const currentSeq = counterSnap.data().currentSeq;
+                if (typeof currentSeq === 'number') {
+                    nextSeq = currentSeq + 1;
+                }
+            }
+            
+            const newOrderRef = doc(collection(db, "orders"));
+            docId = newOrderRef.id;
+            orderNumber = `#${nextSeq}`;
+            
+            // Mettre à jour le compteur atomiquement
+            transaction.set(counterRef, { currentSeq: nextSeq }, { merge: true });
+            
+            // Enregistrer la commande
+            transaction.set(newOrderRef, {
+                ...orderToSave,
+                orderNumber: orderNumber
+            });
+        });
         
-        // Envoyer l'alerte email
+        // Envoyer l'alerte email avec le nouveau numéro
         await sendAdminOrderAlert({
             ...orderData,
-            id: docRef.id
+            id: docId,
+            orderNumber: orderNumber
         });
 
-        return { success: true, orderId: docRef.id };
+        return { success: true, orderId: docId };
     } catch (error: any) {
         console.error("Erreur création commande:", error);
         return { success: false, error: error.message };

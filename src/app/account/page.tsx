@@ -102,6 +102,7 @@ export default function AccountPage() {
 
                         return {
                             id: doc.id,
+                            orderNumber: data.orderNumber || "",
                             date: formattedDate,
                             total: Number(data.total || 0).toLocaleString() + " CFA",
                             status: data.status || "En attente",
@@ -219,7 +220,7 @@ export default function AccountPage() {
                                         <tbody>
                                             {userOrders.map((order) => (
                                                 <tr key={order.id}>
-                                                    <td><span className={styles.orderId}>{order.id}</span></td>
+                                                    <td><span className={styles.orderId}>{order.orderNumber || `#${order.id.slice(-6).toUpperCase()}`}</span></td>
                                                     <td>{order.date}</td>
                                                     <td><span className={styles.total}>{order.total}</span></td>
                                                     <td>
@@ -265,7 +266,7 @@ export default function AccountPage() {
                             </button>
                             
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                                <h2>Détails de la commande {selectedOrder.id}</h2>
+                                <h2>Détails de la commande {selectedOrder.orderNumber || `#${selectedOrder.id.slice(-6).toUpperCase()}`}</h2>
                                 <span className={styles.statusBadge} style={{ backgroundColor: `${selectedOrder.statusColor}15`, color: selectedOrder.statusColor }}>
                                     {selectedOrder.status}
                                 </span>
