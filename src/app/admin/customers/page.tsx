@@ -42,7 +42,7 @@ export default function AdminCustomers() {
                 id: doc.id,
                 ...doc.data(),
                 joinDate: doc.data().createdAt?.toDate ? 
-                          doc.data().createdAt.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 
+                          doc.data().createdAt.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Dakar' }) : 
                           "Date inconnue"
             }));
             setCustomers(usersData);

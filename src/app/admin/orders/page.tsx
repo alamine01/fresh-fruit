@@ -43,10 +43,12 @@ export default function AdminOrders() {
                     formattedDate = dateObj.toLocaleDateString('fr-FR', {
                         day: 'numeric',
                         month: 'long',
-                        year: 'numeric'
+                        year: 'numeric',
+                        timeZone: 'Africa/Dakar'
                     }) + " à " + dateObj.toLocaleTimeString('fr-FR', {
                         hour: '2-digit',
-                        minute: '2-digit'
+                        minute: '2-digit',
+                        timeZone: 'Africa/Dakar'
                     });
                 }
                 return {
