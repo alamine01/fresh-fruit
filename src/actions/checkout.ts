@@ -63,7 +63,7 @@ export async function createLocalOrder(orderData: any) {
             const counterRef = doc(db, "counters", "orders");
             const counterSnap = await transaction.get(counterRef);
             
-            let nextSeq = 1001; // Départ séquentiel à 1001
+            let nextSeq = 100; // Départ séquentiel à 100 (simple comme O'Tacos)
             if (counterSnap.exists()) {
                 const currentSeq = counterSnap.data().currentSeq;
                 if (typeof currentSeq === 'number') {
