@@ -153,11 +153,15 @@ export default function Home() {
               </p>
               <div className={styles.impactStats}>
                 <div className={styles.statItemOrange}>
-                  <strong><AnimatedNumber value={50} prefix="+" /></strong>
+                  <strong style={{ fontSize: '3.5rem', color: 'var(--primary-orange)', fontWeight: 900, lineHeight: 1, marginBottom: '0.5rem', display: 'block' }}>
+                    <AnimatedNumber value={50} prefix="+" />
+                  </strong>
                   <span>Agriculteurs partenaires</span>
                 </div>
                 <div className={styles.statItemOrange}>
-                  <strong><AnimatedNumber value={3} /></strong>
+                  <strong style={{ fontSize: '3.5rem', color: 'var(--primary-orange)', fontWeight: 900, lineHeight: 1, marginBottom: '0.5rem', display: 'block' }}>
+                    <AnimatedNumber value={3} />
+                  </strong>
                   <span>Magasins à Dakar</span>
                 </div>
               </div>
