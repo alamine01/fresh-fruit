@@ -71,7 +71,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         border: 'none'
                     }}
                 >
-                    <ShoppingBag size={18} /> {product.inStock ? "Ajouter au panier" : "Épuisé"}
+                    <ShoppingBag size={18} /> {product.inStock ? (
+                        <>Ajouter<span className={styles.desktopText}> au panier</span></>
+                    ) : "Épuisé"}
                 </button>
             </div>
         </motion.div>

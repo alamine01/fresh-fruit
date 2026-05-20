@@ -293,7 +293,7 @@
     }
 
     .productGrid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+        gap: 1.25rem;
     }
 }
