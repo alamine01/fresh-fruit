@@ -19,12 +19,26 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function AdminCustomers() {
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [customers, setCustomers] = useState<any[]>([]);
+    const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const usersData = snapshot.docs.map(doc => ({
+        setLoading(true);
+
+        // 1. Écouter les commandes en temps réel
+        const unsubOrders = onSnapshot(collection(db, "orders"), (ordersSnap) => {
+            const ordersData = ordersSnap.docs.map(doc => ({
+                id: doc.id,
+                userId: doc.data().userId
+            }));
+            setOrders(ordersData);
+        }, (error) => {
+            console.error("Erreur commandes Firestore :", error);
+        });
+
+        // 2. Écouter les clients en temps réel
+        const unsubUsers = onSnapshot(query(collection(db, "users"), orderBy("createdAt", "desc")), (usersSnap) => {
+            const usersData = usersSnap.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
                 joinDate: doc.data().createdAt?.toDate ? 
@@ -34,12 +48,19 @@ export default function AdminCustomers() {
             setCustomers(usersData);
             setLoading(false);
         }, (error) => {
-            console.error("Erreur Firestore:", error);
+            console.error("Erreur clients Firestore :", error);
             setLoading(false);
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubOrders();
+            unsubUsers();
+        };
     }, []);
+
+    const getCustomerOrderCount = (customerId: string) => {
+        return orders.filter(order => order.userId === customerId).length;
+    };
 
     return (
         <div className={styles.productPage}>
@@ -101,7 +122,7 @@ export default function AdminCustomers() {
                                         </span>
                                     </td>
                                     <td>
-                                        <span style={{ fontWeight: 700, color: '#1a1a1a' }}>{customer.orderCount || 0} achats</span>
+                                        <span style={{ fontWeight: 700, color: '#1a1a1a' }}>{getCustomerOrderCount(customer.id)} achats</span>
                                     </td>
 
                                 </motion.tr>
