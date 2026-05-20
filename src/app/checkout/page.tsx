@@ -15,7 +15,7 @@ export default function CheckoutPage() {
     const { cart, totalPrice, totalItems, clearCart } = useCart();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState("stripe");
+    const [paymentMethod, setPaymentMethod] = useState("wave");
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -273,20 +273,6 @@ export default function CheckoutPage() {
                             </div>
                             
                             <div 
-                                className={`${styles.paymentOption} ${paymentMethod === "stripe" ? styles.selected : ""}`}
-                                onClick={() => setPaymentMethod("stripe")}
-                            >
-                                <input type="radio" checked={paymentMethod === "stripe"} readOnly />
-                                <div className={styles.paymentIcon}>
-                                    <CreditCard size={24} />
-                                </div>
-                                <div className={styles.paymentInfo}>
-                                    <span>Carte Bancaire</span>
-                                    <span>VISA, MasterCard</span>
-                                </div>
-                            </div>
-                            
-                            <div 
                                 className={`${styles.paymentOption} ${paymentMethod === "cod" ? styles.selected : ""}`}
                                 onClick={() => setPaymentMethod("cod")}
                             >
@@ -346,7 +332,7 @@ export default function CheckoutPage() {
                         onClick={handleCheckout}
                         disabled={loading}
                     >
-                        {loading ? "Traitement..." : (paymentMethod === "stripe" ? "Payer maintenant" : "Confirmer la commande")}
+                        {loading ? "Traitement..." : "Confirmer la commande"}
                     </button>
 
                     <p className={styles.secureInfo}>
