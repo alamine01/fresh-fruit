@@ -59,11 +59,11 @@ function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: number, pr
     }, [value, hasAnimated, isMounted]);
 
     if (!isMounted) {
-        return <span>{prefix}{value}{suffix}</span>;
+        return <span style={{ fontSize: 'inherit', color: 'inherit', fontWeight: 'inherit', textTransform: 'none', letterSpacing: 'normal' }}>{prefix}{value}{suffix}</span>;
     }
 
     return (
-        <span ref={elementRef}>
+        <span ref={elementRef} style={{ fontSize: 'inherit', color: 'inherit', fontWeight: 'inherit', textTransform: 'none', letterSpacing: 'normal' }}>
             {prefix}{count}{suffix}
         </span>
     );

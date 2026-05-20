@@ -444,7 +444,7 @@
   font-weight: 900;
 }
 
-.statItemOrange span {
+.statItemOrange > span {
   font-size: 1rem;
   color: var(--text-muted);
   font-weight: 700;
