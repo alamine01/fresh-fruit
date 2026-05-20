@@ -31,11 +31,47 @@ export default function AdminOrders() {
     const [statusFilter, setStatusFilter] = useState<string>("all");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-    // Synchronisation en temps réel avec Firestore
+    // Synchronisation en temps réel avec Firestore + Auto-Backfill pour les anciennes commandes
     useEffect(() => {
-        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const ordersData = snapshot.docs.map(doc => {
+        const q = query(collection(db, "orders"), orderBy("createdAt", "asc"));
+        const unsubscribe = onSnapshot(q, async (snapshot) => {
+            const docs = snapshot.docs;
+            
+            // 1. Détecter s'il y a des commandes sans orderNumber
+            const missingNumbers = docs.filter(doc => !doc.data().orderNumber);
+            
+            if (missingNumbers.length > 0) {
+                console.log(`Auto-backfill : ${missingNumbers.length} commandes sans numéro séquentiel détectées.`);
+                
+                // Mettre à jour les documents sans orderNumber avec leur index chronologique
+                for (let i = 0; i < docs.length; i++) {
+                    const docSnap = docs[i];
+                    const data = docSnap.data();
+                    if (!data.orderNumber) {
+                        const orderRef = doc(db, "orders", docSnap.id);
+                        const seqNumber = `#${100 + i}`;
+                        try {
+                            await updateDoc(orderRef, { orderNumber: seqNumber });
+                            console.log(`Commande ${docSnap.id} mise à jour avec le numéro séquentiel : ${seqNumber}`);
+                        } catch (err) {
+                            console.error(`Erreur mise à jour commande ${docSnap.id}:`, err);
+                        }
+                    }
+                }
+                
+                // Mettre à jour le compteur global pour qu'il soit synchrone
+                const counterRef = doc(db, "counters", "orders");
+                try {
+                    const nextSeqVal = 100 + docs.length;
+                    await updateDoc(counterRef, { currentSeq: nextSeqVal });
+                    console.log(`Compteur global mis à jour à : ${nextSeqVal}`);
+                } catch (err) {
+                    console.error("Erreur mise à jour compteur global:", err);
+                }
+            }
+
+            // 2. Préparer les données pour l'affichage (triées par date décroissante pour l'admin)
+            const ordersData = docs.map(doc => {
                 const data = doc.data();
                 let formattedDate = "Date inconnue";
                 if (data.createdAt) {
@@ -57,6 +93,14 @@ export default function AdminOrders() {
                     date: formattedDate
                 };
             });
+
+            // Trier par le plus récent en premier (décroissant)
+            ordersData.sort((a: any, b: any) => {
+                const aTime = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate().getTime() : new Date(a.createdAt).getTime()) : 0;
+                const bTime = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate().getTime() : new Date(b.createdAt).getTime()) : 0;
+                return bTime - aTime;
+            });
+
             setOrders(ordersData);
             setLoading(false);
         }, (error) => {
