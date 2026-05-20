@@ -94,6 +94,7 @@ export default function CheckoutPage() {
                     total: totalPrice,
                     customer: formData,
                     paymentMethod: "cod",
+                    paymentStatus: "Non payé",
                     userId: user?.uid || null
                 });
                 
