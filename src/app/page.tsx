@@ -11,8 +11,15 @@ function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: number, pr
     const [count, setCount] = useState(0);
     const elementRef = useRef<HTMLSpanElement>(null);
     const [hasAnimated, setHasAnimated] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!isMounted) return;
+
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting && !hasAnimated) {
                 setHasAnimated(true);
@@ -49,7 +56,11 @@ function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: number, pr
         }
 
         return () => observer.disconnect();
-    }, [value, hasAnimated]);
+    }, [value, hasAnimated, isMounted]);
+
+    if (!isMounted) {
+        return <span>{prefix}{value}{suffix}</span>;
+    }
 
     return (
         <span ref={elementRef}>
