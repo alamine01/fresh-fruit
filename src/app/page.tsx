@@ -1,10 +1,62 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
 import Hero from "@/components/home/Hero";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { Apple, ShoppingBasket, Leaf, ArrowRight, CupSoda, Heart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+
+function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) {
+    const [count, setCount] = useState(0);
+    const elementRef = useRef<HTMLSpanElement>(null);
+    const [hasAnimated, setHasAnimated] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !hasAnimated) {
+                setHasAnimated(true);
+                let start = 0;
+                const end = value;
+                if (start === end) return;
+
+                const duration = 1500; // 1.5 seconds animation
+                const startTime = performance.now();
+
+                const animate = (currentTime: number) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // easeOutQuad easing
+                    const easeProgress = progress * (2 - progress);
+                    
+                    const currentCount = Math.floor(easeProgress * end);
+                    setCount(currentCount);
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        setCount(end);
+                    }
+                };
+
+                requestAnimationFrame(animate);
+            }
+        }, { threshold: 0.1 });
+
+        if (elementRef.current) {
+            observer.observe(elementRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [value, hasAnimated]);
+
+    return (
+        <span ref={elementRef}>
+            {prefix}{count}{suffix}
+        </span>
+    );
+}
 
 const categories = [
   {
@@ -90,11 +142,11 @@ export default function Home() {
               </p>
               <div className={styles.impactStats}>
                 <div className={styles.statItemOrange}>
-                  <strong>+50</strong>
+                  <strong><AnimatedNumber value={50} prefix="+" /></strong>
                   <span>Agriculteurs partenaires</span>
                 </div>
                 <div className={styles.statItemOrange}>
-                  <strong>3</strong>
+                  <strong><AnimatedNumber value={3} /></strong>
                   <span>Magasins à Dakar</span>
                 </div>
               </div>
