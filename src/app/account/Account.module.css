@@ -137,6 +137,7 @@
 .total {
     font-weight: 800;
     color: var(--primary-green);
+    white-space: nowrap;
 }
 
 .statusBadge {
@@ -144,6 +145,7 @@
     border-radius: 50px;
     font-size: 0.8rem;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 .viewBtn {

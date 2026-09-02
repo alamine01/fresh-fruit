@@ -18,4 +18,19 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-export { app, db, auth, storage };
+// Secondary auth for verification without touching primary auth state
+let secondaryAuth: any = null;
+if (typeof window !== "undefined") {
+    try {
+        const secondaryApp = getApps().find(a => a.name === "secondary-2fa") 
+            || initializeApp(firebaseConfig, "secondary-2fa");
+        secondaryAuth = getAuth(secondaryApp);
+        if (secondaryAuth && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+            secondaryAuth.settings.appVerificationDisabledForTesting = true;
+        }
+    } catch (e) {
+        console.error("Error setting up secondary Firebase App:", e);
+    }
+}
+
+export { app, db, auth, storage, secondaryAuth, firebaseConfig };

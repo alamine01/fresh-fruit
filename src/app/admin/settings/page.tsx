@@ -13,7 +13,8 @@ import {
     Phone,
     MapPin,
     Loader2,
-    CheckCircle
+    CheckCircle,
+    Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -24,7 +25,16 @@ export default function AdminSettings() {
         phone: "+221 33 824 00 00",
         address: "Point E, Dakar, Sénégal",
         notifications: true,
-        maintenanceMode: false
+        maintenanceMode: false,
+        openingHours: {
+            Lundi: "10h - 20h",
+            Mardi: "10h - 20h",
+            Mercredi: "10h - 20h",
+            Jeudi: "10h - 20h",
+            Vendredi: "10h - 20h",
+            Samedi: "10h - 20h",
+            Dimanche: "11h - 19h"
+        }
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -36,7 +46,24 @@ export default function AdminSettings() {
                 const docRef = doc(db, "settings", "general");
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    setSettings(docSnap.data() as any);
+                    const data = docSnap.data();
+                    setSettings({
+                        storeName: data.storeName || "Fresh Fruit",
+                        email: data.email || "contact@fresh-fruit.sn",
+                        phone: data.phone || "+221 33 824 00 00",
+                        address: data.address || "Point E, Dakar, Sénégal",
+                        notifications: data.notifications ?? true,
+                        maintenanceMode: data.maintenanceMode ?? false,
+                        openingHours: data.openingHours || {
+                            Lundi: "10h - 20h",
+                            Mardi: "10h - 20h",
+                            Mercredi: "10h - 20h",
+                            Jeudi: "10h - 20h",
+                            Vendredi: "10h - 20h",
+                            Samedi: "10h - 20h",
+                            Dimanche: "11h - 19h"
+                        }
+                    });
                 }
             } catch (error) {
                 console.error("Erreur lors du chargement des paramètres:", error);
@@ -97,77 +124,106 @@ export default function AdminSettings() {
                     <p style={{ marginTop: '1rem', color: '#666' }}>Chargement des réglages...</p>
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-                <motion.section 
-                    style={{ background: 'white', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                >
-                    <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
-                        <Store size={22} color="var(--primary-green)" /> Informations Boutique
-                    </h3>
-                    
-                    <div className={styles.formGroup}>
-                        <label>Nom de la boutique</label>
-                        <input type="text" value={settings.storeName} onChange={e => setSettings({...settings, storeName: e.target.value})} />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label>Téléphone de contact</label>
-                        <div style={{ position: 'relative' }}>
-                            <Phone size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#999' }} />
-                            <input type="text" style={{ paddingLeft: '3rem' }} value={settings.phone} onChange={e => setSettings({...settings, phone: e.target.value})} />
-                        </div>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label>Adresse physique</label>
-                        <div style={{ position: 'relative' }}>
-                            <MapPin size={16} style={{ position: 'absolute', left: '1rem', top: '1.2rem', color: '#999' }} />
-                            <textarea style={{ paddingLeft: '3rem' }} rows={3} value={settings.address} onChange={e => setSettings({...settings, address: e.target.value})} />
-                        </div>
-                    </div>
-                </motion.section>
-
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                    <motion.section 
-                        style={{ background: 'white', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                    >
-                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
-                            <Bell size={22} color="#E65100" /> Notifications
-                        </h3>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <p style={{ fontWeight: 700 }}>Alertes de nouvelles commandes</p>
-                                <p style={{ fontSize: '0.85rem', color: '#888' }}>Recevoir un email à chaque nouvelle vente.</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                        <motion.section 
+                            style={{ background: 'white', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
+                                <Store size={22} color="var(--primary-green)" /> Informations Boutique
+                            </h3>
+                            
+                            <div className={styles.formGroup}>
+                                <label>Nom de la boutique</label>
+                                <input type="text" value={settings.storeName} onChange={e => setSettings({...settings, storeName: e.target.value})} />
                             </div>
-                            <input type="checkbox" checked={settings.notifications} onChange={e => setSettings({...settings, notifications: e.target.checked})} />
+
+                            <div className={styles.formGroup}>
+                                <label>Téléphone de contact</label>
+                                <div style={{ position: 'relative' }}>
+                                    <Phone size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#999' }} />
+                                    <input type="text" style={{ paddingLeft: '3rem' }} value={settings.phone} onChange={e => setSettings({...settings, phone: e.target.value})} />
+                                </div>
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label>Adresse physique</label>
+                                <div style={{ position: 'relative' }}>
+                                    <MapPin size={16} style={{ position: 'absolute', left: '1rem', top: '1.2rem', color: '#999' }} />
+                                    <textarea style={{ paddingLeft: '3rem' }} rows={3} value={settings.address} onChange={e => setSettings({...settings, address: e.target.value})} />
+                                </div>
+                            </div>
+                        </motion.section>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                            <motion.section 
+                                style={{ background: 'white', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                            >
+                                <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
+                                    <Bell size={22} color="#E65100" /> Notifications
+                                </h3>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <p style={{ fontWeight: 700 }}>Alertes de nouvelles commandes</p>
+                                        <p style={{ fontSize: '0.85rem', color: '#888' }}>Recevoir un email à chaque nouvelle vente.</p>
+                                    </div>
+                                    <input type="checkbox" checked={settings.notifications} onChange={e => setSettings({...settings, notifications: e.target.checked})} />
+                                </div>
+                            </motion.section>
+
+                            <motion.section 
+                                style={{ background: 'white', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                            >
+                                <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
+                                    <Shield size={22} color="#D32F2F" /> Sécurité
+                                </h3>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <p style={{ fontWeight: 700 }}>Mode Maintenance</p>
+                                        <p style={{ fontSize: '0.85rem', color: '#888' }}>Rendre le site inaccessible temporairement.</p>
+                                    </div>
+                                    <input type="checkbox" checked={settings.maintenanceMode} onChange={e => setSettings({...settings, maintenanceMode: e.target.checked})} />
+                                </div>
+                            </motion.section>
                         </div>
-                    </motion.section>
+                    </div>
 
                     <motion.section 
                         style={{ background: 'white', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
+                        transition={{ delay: 0.3 }}
                     >
                         <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
-                            <Shield size={22} color="#D32F2F" /> Sécurité
+                            <Clock size={22} color="var(--primary-green)" /> Horaires d'Ouverture
                         </h3>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <p style={{ fontWeight: 700 }}>Mode Maintenance</p>
-                                <p style={{ fontSize: '0.85rem', color: '#888' }}>Rendre le site inaccessible temporairement.</p>
-                            </div>
-                            <input type="checkbox" checked={settings.maintenanceMode} onChange={e => setSettings({...settings, maintenanceMode: e.target.checked})} />
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
+                            {settings.openingHours && Object.entries(settings.openingHours).map(([day, hours]) => (
+                                <div key={day} className={styles.formGroup} style={{ marginBottom: 0 }}>
+                                    <label style={{ fontSize: '0.85rem', fontWeight: 700 }}>{day}</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Ex: 10h - 20h (Pause: 13h - 15h) ou Fermé" 
+                                        value={hours as string} 
+                                        onChange={e => {
+                                            const newHours = { ...settings.openingHours, [day]: e.target.value };
+                                            setSettings({ ...settings, openingHours: newHours });
+                                        }} 
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </motion.section>
                 </div>
-            </div>
-        )}
+            )}
         </div>
     );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./About.module.css";
-import { Truck, Store, Heart, Users, CheckCircle } from "lucide-react";
+import { Truck, Store, Heart, Users, CheckCircle, Sprout, Apple } from "lucide-react";
 import { motion } from "framer-motion";
 
 const fadeIn = {
@@ -17,7 +17,8 @@ export default function AboutPage() {
             {/* Hero Section simple */}
             <section className={styles.aboutHero}>
                 <div className="container">
-                    <motion.h1 {...fadeIn}>Notre Vision, Votre Santé</motion.h1>
+                    <motion.span className={styles.heroBadge} {...fadeIn}>Qui sommes-nous ?</motion.span>
+                    <motion.h1 {...fadeIn} transition={{ delay: 0.1 }}>Notre Vision, Votre Santé</motion.h1>
                     <motion.p {...fadeIn} transition={{ delay: 0.2 }}>
                         Fresh Fruit est né d'une passion pour les produits de qualité et d'un engagement profond pour le développement local au Sénégal.
                     </motion.p>
@@ -39,7 +40,7 @@ export default function AboutPage() {
                         <div className={styles.points}>
                             <div className={styles.point}>
                                 <Users size={20} />
-                                <span>Accompagnement de +50 jeunes exploitants</span>
+                                <span>Accompagnement de nombreux jeunes exploitants</span>
                             </div>
                             <div className={styles.point}>
                                 <Heart size={20} />
@@ -50,6 +51,91 @@ export default function AboutPage() {
                     <motion.div className={styles.missionImage} {...fadeIn} transition={{ delay: 0.2 }}>
                         <img src="/jeunes-agriculteurs.png" alt="Jeunes agriculteurs sénégalais" />
                     </motion.div>
+                </div>
+            </section>
+
+            {/* Process Section */}
+            <section className={styles.processSection}>
+                <div className="container">
+                    <motion.div className={styles.sectionHeader} {...fadeIn}>
+                        <span className={styles.badge}>Notre Métier</span>
+                        <h2>De l'Arbre à la Table</h2>
+                        <p>Découvrez les étapes clés qui garantissent une fraîcheur exceptionnelle au quotidien.</p>
+                    </motion.div>
+
+                    <div className={styles.processGrid}>
+                        <motion.div 
+                            className={styles.processCard} 
+                            {...fadeIn} 
+                            transition={{ delay: 0.1 }}
+                        >
+                            <div className={styles.stepNumber}>1</div>
+                            <div className={styles.processImageWrapper}>
+                                <img src="/process-step-1.png" alt="Sélection & Partenariats" className={styles.processImage} />
+                            </div>
+                            <div className={styles.processContent}>
+                                <div className={styles.processIcon}>
+                                    <Sprout size={22} />
+                                </div>
+                                <h3>Sélection & Partenariats</h3>
+                                <p>Nous tissons des liens de confiance avec des jeunes agriculteurs locaux passionnés à travers tout le Sénégal.</p>
+                            </div>
+                        </motion.div>
+
+                        <motion.div 
+                            className={styles.processCard} 
+                            {...fadeIn} 
+                            transition={{ delay: 0.2 }}
+                        >
+                            <div className={styles.stepNumber}>2</div>
+                            <div className={styles.processImageWrapper}>
+                                <img src="/process-step-2.png" alt="Récolte Responsable" className={styles.processImage} />
+                            </div>
+                            <div className={styles.processContent}>
+                                <div className={styles.processIcon}>
+                                    <Apple size={22} />
+                                </div>
+                                <h3>Récolte Responsable</h3>
+                                <p>Les fruits sont récoltés manuellement, à pleine maturité, pour préserver toutes leurs vitamines et saveurs originelles.</p>
+                            </div>
+                        </motion.div>
+
+                        <motion.div 
+                            className={styles.processCard} 
+                            {...fadeIn} 
+                            transition={{ delay: 0.3 }}
+                        >
+                            <div className={styles.stepNumber}>3</div>
+                            <div className={styles.processImageWrapper}>
+                                <img src="/process-step-3.png" alt="Contrôle & Tri" className={styles.processImage} />
+                            </div>
+                            <div className={styles.processContent}>
+                                <div className={styles.processIcon}>
+                                    <CheckCircle size={22} />
+                                </div>
+                                <h3>Contrôle & Tri</h3>
+                                <p>Chaque arrivage est inspecté minutieusement et calibré dans nos ateliers de tri pour ne garder que le meilleur.</p>
+                            </div>
+                        </motion.div>
+
+                        <motion.div 
+                            className={styles.processCard} 
+                            {...fadeIn} 
+                            transition={{ delay: 0.4 }}
+                        >
+                            <div className={styles.stepNumber}>4</div>
+                            <div className={styles.processImageWrapper}>
+                                <img src="/process-step-4.png" alt="Livraison Express" className={styles.processImage} />
+                            </div>
+                            <div className={styles.processContent}>
+                                <div className={styles.processIcon}>
+                                    <Truck size={22} />
+                                </div>
+                                <h3>Livraison Express</h3>
+                                <p>Acheminés dans le respect de la chaîne du froid, vos fruits vous sont livrés à Dakar en moins de 24 heures.</p>
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 

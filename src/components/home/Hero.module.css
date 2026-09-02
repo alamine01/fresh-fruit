@@ -1,6 +1,6 @@
 .hero {
     position: relative;
-    padding: 8rem 0 6rem;
+    padding: 13rem 0 6rem;
     overflow: hidden;
     background: var(--background);
     min-height: 90vh;
@@ -141,7 +141,7 @@
 
 @media (max-width: 768px) {
     .hero {
-        padding: 10rem 0 2rem;
+        padding: 11rem 0 2rem;
         min-height: auto;
     }
 

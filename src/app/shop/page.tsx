@@ -18,6 +18,7 @@ export default function ShopPage() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [maxPrice, setMaxPrice] = useState(100000);
     const [absoluteMax, setAbsoluteMax] = useState(100000);
+    const [priceStep, setPriceStep] = useState(500);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -27,10 +28,26 @@ export default function ShopPage() {
                 
                 if (data.length > 0) {
                     const highestPrice = Math.max(...data.map(p => p.price));
-                    // Arrondir au millier supérieur pour un affichage propre
-                    const roundedMax = Math.ceil(highestPrice / 1000) * 1000;
+                    let roundedMax = 25000;
+                    let step = 500;
+                    
+                    if (highestPrice <= 100) {
+                        roundedMax = Math.ceil(highestPrice / 10) * 10;
+                        step = 10;
+                    } else if (highestPrice <= 1000) {
+                        roundedMax = Math.ceil(highestPrice / 100) * 100;
+                        step = 50;
+                    } else if (highestPrice <= 10000) {
+                        roundedMax = Math.ceil(highestPrice / 1000) * 1000;
+                        step = 200;
+                    } else {
+                        roundedMax = Math.ceil(highestPrice / 1000) * 1000;
+                        step = 500;
+                    }
+                    
                     setAbsoluteMax(roundedMax || 25000);
                     setMaxPrice(roundedMax || 25000);
+                    setPriceStep(step);
                 }
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -84,7 +101,7 @@ export default function ShopPage() {
                         type="range"
                         min="0"
                         max={absoluteMax}
-                        step="500"
+                        step={priceStep}
                         value={maxPrice}
                         onChange={(e) => setMaxPrice(Number(e.target.value))}
                     />

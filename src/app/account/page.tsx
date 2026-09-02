@@ -16,12 +16,13 @@ import {
     ArrowLeft,
     CreditCard,
     ShoppingBag,
-    Loader2
+    Loader2,
+    ShieldCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import styles from './Account.module.css';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 
 export default function AccountPage() {
@@ -31,6 +32,7 @@ export default function AccountPage() {
     const [userOrders, setUserOrders] = useState<any[]>([]);
     const [loadingOrders, setLoadingOrders] = useState(true);
     const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     // États pour l'édition du nom complet
     const [isEditing, setIsEditing] = useState(false);
@@ -64,6 +66,28 @@ export default function AccountPage() {
             router.push('/account/login');
         }
     }, [user, loading, router]);
+
+    useEffect(() => {
+        if (user) {
+            const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "contact@fresh-fruit.sn";
+            if (user.email === adminEmail) {
+                setIsAdmin(true);
+            } else {
+                const checkRole = async () => {
+                    try {
+                        const userDocRef = doc(db, "users", user.uid);
+                        const userDocSnap = await getDoc(userDocRef);
+                        if (userDocSnap.exists() && userDocSnap.data().role === "admin") {
+                            setIsAdmin(true);
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                };
+                checkRole();
+            }
+        }
+    }, [user]);
 
     useEffect(() => {
         if (user) {
@@ -148,9 +172,16 @@ export default function AccountPage() {
                 <Link href="/" className={styles.logo} style={{ marginBottom: 0 }}>
                     <Apple size={24} /> <span>Fresh Fruit</span>
                 </Link>
-                <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'white' }}>
-                    <LogOut size={20} />
-                </button>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    {isAdmin && (
+                        <Link href="/admin" style={{ color: 'var(--primary-orange)', display: 'flex', alignItems: 'center' }}>
+                            <ShieldCheck size={20} />
+                        </Link>
+                    )}
+                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'white', display: 'flex', alignItems: 'center' }}>
+                        <LogOut size={20} />
+                    </button>
+                </div>
             </header>
 
             <aside className={styles.sidebar}>
@@ -173,6 +204,16 @@ export default function AccountPage() {
                         <User size={20} />
                         <span>Mon Profil</span>
                     </button>
+                    {isAdmin && (
+                        <Link
+                            href="/admin"
+                            className={styles.navItem}
+                            style={{ color: "var(--primary-orange)" }}
+                        >
+                            <ShieldCheck size={20} />
+                            <span>Administration</span>
+                        </Link>
+                    )}
                 </nav>
 
                 <button className={`${styles.navItem} ${styles.logout}`} onClick={handleLogout}>
@@ -184,9 +225,23 @@ export default function AccountPage() {
             <main className={styles.mainContent}>
                 <header className={styles.header}>
                     <h1>Mon Espace Client</h1>
-                    <p style={{ color: '#666', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        Bonjour, <span style={{ fontWeight: 700 }}>{user.displayName || user.email?.split('@')[0] || "Client"}</span> <CheckCircle size={18} color="var(--primary-green)" />
-                    </p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', width: '100%' }}>
+                        <p style={{ color: '#666', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                            Bonjour, <span style={{ fontWeight: 700 }}>{user.displayName || user.email?.split('@')[0] || "Client"}</span> 
+                            {isAdmin ? (
+                                <span style={{ background: 'rgba(230, 81, 0, 0.1)', color: 'var(--primary-orange)', padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <ShieldCheck size={12} /> Admin
+                                </span>
+                            ) : (
+                                <CheckCircle size={18} color="var(--primary-green)" />
+                            )}
+                        </p>
+                        {isAdmin && (
+                            <Link href="/admin" className="btn btn-secondary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
+                                Console Administration <ChevronRight size={14} />
+                            </Link>
+                        )}
+                    </div>
                 </header>
 
                 <AnimatePresence mode="wait">
@@ -432,6 +487,12 @@ export default function AccountPage() {
                     <User size={20} />
                     <span>Profil</span>
                 </button>
+                {isAdmin && (
+                    <Link href="/admin" className={styles.bottomNavLink} style={{ color: 'var(--primary-orange)' }}>
+                        <ShieldCheck size={20} />
+                        <span>Admin</span>
+                    </Link>
+                )}
                 <button className={styles.bottomNavLink} onClick={handleLogout}>
                     <LogOut size={20} />
                     <span>Quitter</span>

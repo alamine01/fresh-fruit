@@ -10,6 +10,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Configuration email manquante" }, { status: 500 });
         }
 
+        const senderEmail = process.env.SENDER_EMAIL || "bahlamine2004zahra@gmail.com";
+
         const response = await fetch("https://api.brevo.com/v3/smtp/email", {
             method: "POST",
             headers: {
@@ -18,7 +20,7 @@ export async function POST(req: Request) {
                 "content-type": "application/json"
             },
             body: JSON.stringify({
-                sender: { name: "Fresh Fruit Admin", email: "no-reply@fresh-fruit.sn" },
+                sender: { name: "Fresh Fruit Admin", email: senderEmail },
                 to: [{ email: to }],
                 subject: subject,
                 htmlContent: htmlContent

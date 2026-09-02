@@ -1,5 +1,6 @@
 .productPage {
-    padding: 3rem 0;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
 }
 
 .topNav {
@@ -189,8 +190,8 @@
 
 @media (max-width: 768px) {
     .productPage {
-        padding: 2rem 1.5rem;
-        /* Side padding enabled */
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
 
     .name {

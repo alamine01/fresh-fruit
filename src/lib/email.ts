@@ -1,3 +1,6 @@
+import { db } from "./firebase";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+
 export async function sendAdminOrderAlert(order: any) {
     const adminEmail = process.env.ADMIN_EMAIL;
     const apiKey = process.env.BREVO_API_KEY;
@@ -6,6 +9,53 @@ export async function sendAdminOrderAlert(order: any) {
         console.warn("Configuration Brevo manquante (ADMIN_EMAIL ou BREVO_API_KEY)");
         return;
     }
+
+    // Vérifier si le paramètre "Alertes de nouvelles commandes" est actif
+    try {
+        const settingsRef = doc(db, "settings", "general");
+        const settingsSnap = await getDoc(settingsRef);
+        if (settingsSnap.exists()) {
+            const settingsData = settingsSnap.data();
+            if (settingsData && settingsData.notifications === false) {
+                console.log("Les alertes de nouvelles commandes sont désactivées dans les paramètres.");
+                return;
+            }
+        }
+    } catch (error) {
+        console.error("Erreur lors de la lecture des paramètres de notification :", error);
+        // En cas d'erreur de lecture, nous continuons pour ne pas rater d'alerte par défaut.
+    }
+
+    // Récupérer tous les emails des administrateurs
+    const adminEmailsSet = new Set<string>();
+    
+    // 1. Ajouter l'email de l'admin principal du .env
+    if (adminEmail) {
+        adminEmailsSet.add(adminEmail.trim().toLowerCase());
+    }
+
+    // 2. Chercher les autres administrateurs dans Firestore
+    try {
+        const adminsQuery = query(collection(db, "users"), where("role", "==", "admin"));
+        const adminsSnap = await getDocs(adminsQuery);
+        adminsSnap.forEach((docSnap) => {
+            const data = docSnap.data();
+            if (data.email) {
+                adminEmailsSet.add(data.email.trim().toLowerCase());
+            }
+        });
+    } catch (e) {
+        console.error("Erreur lors de la récupération des admins depuis Firestore :", e);
+    }
+
+    const adminEmails = Array.from(adminEmailsSet);
+
+    if (adminEmails.length === 0) {
+        console.warn("Aucun destinataire email admin configuré.");
+        return;
+    }
+
+    const recipients = adminEmails.map((email) => ({ email }));
 
     const itemsHtml = order.items.map((item: any) => `
         <tr>
@@ -71,13 +121,13 @@ export async function sendAdminOrderAlert(order: any) {
                 "content-type": "application/json"
             },
             body: JSON.stringify({
-                sender: { name: "Fresh Fruit", email: "no-reply@fresh-fruit.sn" },
-                to: [{ email: adminEmail }],
+                sender: { name: "Fresh Fruit", email: process.env.SENDER_EMAIL || "bahlamine2004zahra@gmail.com" },
+                to: recipients,
                 subject: `🚀 Nouvelle commande de ${order.customer.firstName} (${order.total.toLocaleString()} CFA)`,
                 htmlContent: htmlContent
             })
         });
-        console.log("Alerte email envoyée à l'admin");
+        console.log(`Alerte email envoyée aux admins (${adminEmails.join(", ")})`);
     } catch (error) {
         console.error("Erreur envoi alerte email:", error);
     }

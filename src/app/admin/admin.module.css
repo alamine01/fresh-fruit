@@ -293,3 +293,62 @@
   font-weight: 600;
   outline: none;
 }
+
+/* Sidebar Collapse Styles for Desktop */
+@media (min-width: 1025px) {
+  .sidebarCollapsed {
+    width: 80px;
+    padding: 2rem 0.5rem;
+    align-items: center;
+  }
+  
+  .sidebarCollapsed .logo span, 
+  .sidebarCollapsed .navLink span {
+    display: none;
+  }
+  
+  .sidebarCollapsed .logo {
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .sidebarCollapsed .navLink {
+    justify-content: center;
+    padding: 1.2rem;
+  }
+  
+  .mainContentCollapsed {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+}
+
+.toggleBtn {
+  position: absolute;
+  top: 24px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-green);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 110;
+  transition: all 0.3s ease;
+}
+
+.toggleBtn:hover {
+  transform: scale(1.1);
+  background: var(--primary-orange);
+}
+
+@media (max-width: 1024px) {
+  .toggleBtn {
+    display: none !important;
+  }
+}

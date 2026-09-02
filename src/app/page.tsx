@@ -1,10 +1,10 @@
-"use client";
+   "use client";
 
 import { useEffect, useState, useRef } from "react";
 import Hero from "@/components/home/Hero";
 import styles from "./page.module.css";
 import Link from "next/link";
-import { Apple, ShoppingBasket, Leaf, ArrowRight, CupSoda, Heart, Zap } from "lucide-react";
+import { Apple, ShoppingBasket, Leaf, ArrowRight, CupSoda, Heart, Zap, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) {
@@ -154,7 +154,7 @@ export default function Home() {
               <div className={styles.impactStats}>
                 <div className={styles.statItemOrange}>
                   <strong style={{ fontSize: '3.5rem', color: 'var(--primary-orange)', fontWeight: 900, lineHeight: 1, marginBottom: '0.5rem', display: 'block' }}>
-                    <AnimatedNumber value={50} prefix="+" />
+                    <AnimatedNumber value={15} suffix="+" />
                   </strong>
                   <span>Agriculteurs partenaires</span>
                 </div>

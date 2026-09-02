@@ -2,11 +2,61 @@
 
 import Link from 'next/link';
 import styles from './Footer.module.css';
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter, ExternalLink } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, ExternalLink, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+
+const TiktokIcon = ({ size = 18 }: { size?: number }) => (
+    <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        width={size} 
+        height={size} 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+    >
+        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    </svg>
+);
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
+    const [openingHours, setOpeningHours] = useState<Record<string, string>>({
+        Lundi: "10h - 20h",
+        Mardi: "10h - 20h",
+        Mercredi: "10h - 20h",
+        Jeudi: "10h - 20h",
+        Vendredi: "10h - 20h",
+        Samedi: "10h - 20h",
+        Dimanche: "11h - 19h"
+    });
+    const [isOpen, setIsOpen] = useState(false);
+    const [todayName, setTodayName] = useState("");
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const docRef = doc(db, "settings", "general");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists() && docSnap.data().openingHours) {
+                    setOpeningHours(docSnap.data().openingHours);
+                }
+            } catch (error) {
+                console.error("Error fetching opening hours for footer:", error);
+            }
+        };
+        fetchSettings();
+
+        // Determine today's name in French
+        const days = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+        const dayIndex = new Date().getDay();
+        setTodayName(days[dayIndex]);
+    }, []);
 
     return (
         <footer className={styles.footer}>
@@ -22,14 +72,14 @@ const Footer = () => {
                         Fruits de saison et jus naturels pour une vie pleine de vitalité.
                     </p>
                     <div className={styles.social}>
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Facebook">
+                        <a href="https://www.facebook.com/share/1DACRAg4wt/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Facebook">
                             <Facebook size={18} />
                         </a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Instagram">
+                        <a href="https://www.instagram.com/freshfruitsenegal?igsh=MTV3cTE1eDlyOTV5bQ==" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Instagram">
                             <Instagram size={18} />
                         </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Twitter">
-                            <Twitter size={18} />
+                        <a href="https://www.tiktok.com/@fresh.fruits.mariste?_r=1&_t=ZN-96xILK25hyg" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="TikTok">
+                            <TiktokIcon size={18} />
                         </a>
                     </div>
                 </div>
@@ -63,11 +113,54 @@ const Footer = () => {
                         <Mail size={16} />
                         <span>contact@fresh-fruit.fr</span>
                     </div>
-                    <div className={styles.contactItem}>
-                        <Clock size={16} />
-                        <div>
-                            <p>Lun - Sam : 10h - 20h</p>
-                            <p>Dimanche : 11h - 19h</p>
+                    <div className={styles.contactItem} style={{ width: '100%' }}>
+                        <div className={styles.dropdownContainer}>
+                            <button 
+                                className={styles.dropdownTrigger}
+                                onClick={() => setIsOpen(!isOpen)}
+                                type="button"
+                                aria-expanded={isOpen}
+                            >
+                                <Clock size={16} />
+                                <div className={styles.dropdownTriggerText}>
+                                    <span>Horaires d'ouverture</span>
+                                    <small style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+                                        {todayName ? `Aujourd'hui : ${openingHours[todayName] || 'Fermé'}` : 'Cliquez pour voir'}
+                                    </small>
+                                </div>
+                                <ChevronDown 
+                                    size={16} 
+                                    className={`${styles.chevronIcon} ${isOpen ? styles.chevronOpen : ''}`} 
+                                />
+                            </button>
+
+                            <AnimatePresence>
+                                {isOpen && (
+                                    <motion.div 
+                                        className={styles.dropdownMenu}
+                                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        transition={{ duration: 0.2, ease: "easeOut" }}
+                                    >
+                                        {Object.entries(openingHours).map(([day, hours]) => {
+                                            const isToday = day === todayName;
+                                            return (
+                                                <div 
+                                                    key={day} 
+                                                    className={`${styles.dayRow} ${isToday ? styles.todayRow : ''}`}
+                                                >
+                                                    <span className={styles.dayName}>
+                                                        {day}
+                                                        {isToday && <span className={styles.todayBadge}>Auj.</span>}
+                                                    </span>
+                                                    <span className={styles.dayHours}>{hours}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
                 </div>

@@ -27,9 +27,18 @@ function LoginContent() {
         phone: ""
     });
 
+    const handleRedirect = (currentUser: any) => {
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "contact@fresh-fruit.sn";
+        if (currentUser && currentUser.email === adminEmail) {
+            router.push('/admin');
+        } else {
+            router.push('/' + redirectPath);
+        }
+    };
+
     useEffect(() => {
         if (user) {
-            router.push('/' + redirectPath);
+            handleRedirect(user);
         }
     }, [user, router, redirectPath]);
 
@@ -40,7 +49,7 @@ function LoginContent() {
         setError("");
         try {
             await loginWithGoogle();
-            router.push('/' + redirectPath);
+            // Le redirect sera géré automatiquement par le useEffect qui observe "user"
         } catch (error) {
             console.error("Google login error:", error);
             setError("Impossible de se connecter avec Google.");
@@ -56,7 +65,7 @@ function LoginContent() {
 
         try {
             await loginWithEmail(formData.email, formData.password);
-            router.push('/' + redirectPath);
+            // Le redirect sera géré automatiquement par le useEffect qui observe "user"
         } catch (err: any) {
             console.error("Email login error:", err);
             if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
@@ -115,7 +124,7 @@ function LoginContent() {
             const res = await confirmationResult.confirm(otp);
             // S'assurer que l'utilisateur est dans Firestore
             await saveUserToFirestore(res.user);
-            router.push('/' + redirectPath);
+            // Le redirect sera géré automatiquement par le useEffect qui observe "user"
         } catch (err: any) {
             console.error("OTP verification error:", err);
             setError("Code de confirmation incorrect.");

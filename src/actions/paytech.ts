@@ -5,6 +5,17 @@ export async function createPayTechPayment(orderData: any, paymentMethod: string
     const API_SECRET = process.env.PAYTECH_API_SECRET || "test_secret";
 
     try {
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || orderData.origin || "https://freshfruit.sn";
+
+        // PayTech exige impérativement une URL en https pour l'ipn_url
+        let ipnUrl = process.env.PAYTECH_IPN_URL || `${baseUrl}/api/webhooks/paytech`;
+        if (ipnUrl.startsWith("http://")) {
+            ipnUrl = ipnUrl.replace(/^http:\/\//, "https://");
+        }
+
+        const successUrl = `${orderData.origin || baseUrl}/checkout/success?order_id=${orderData.orderId}`;
+        const cancelUrl = `${orderData.origin || baseUrl}/checkout/cancel`;
+
         // Envoi de la requête à PayTech
         const response = await fetch("https://paytech.sn/api/payment/request-payment", {
             method: "POST",
@@ -20,11 +31,11 @@ export async function createPayTechPayment(orderData: any, paymentMethod: string
                 currency: "XOF",
                 ref_command: orderData.orderId,
                 command_name: "Paiement de la commande #" + orderData.orderId,
-                env: "prod",
+                env: process.env.PAYTECH_ENV || "test",
                 target_payment: paymentMethod === 'wave' ? 'Wave' : (paymentMethod === 'om' ? 'Orange Money' : null),
-                success_url: `${orderData.origin}/checkout/success?order_id=${orderData.orderId}`,
-                cancel_url: orderData.origin + "/checkout/cancel",
-                ipn_url: orderData.origin + "/api/webhooks/paytech",
+                success_url: successUrl,
+                cancel_url: cancelUrl,
+                ipn_url: ipnUrl,
                 custom_field: JSON.stringify(orderData.customer)
             })
         });
@@ -47,7 +58,8 @@ export async function createPayTechPayment(orderData: any, paymentMethod: string
 
             return { success: true, redirect_url: finalUrl };
         } else {
-            return { success: false, message: result.errors?.[0] || "Erreur de configuration PayTech" };
+            const errorMsg = (Array.isArray(result.error) ? result.error[0] : result.error) || result.message || "Erreur de configuration PayTech";
+            return { success: false, message: errorMsg };
         }
     } catch (error) {
         console.error("Erreur PayTech:", error);

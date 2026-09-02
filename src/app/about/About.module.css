@@ -1,67 +1,88 @@
 .aboutPage {
-    padding-bottom: 8rem;
+    padding-bottom: 4rem;
 }
 
 .aboutHero {
-    padding: 8rem 0;
+    padding: 4.5rem 0 2.5rem;
     text-align: center;
-    background: linear-gradient(to bottom, #fcfdfc, white);
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.03) 0%, rgba(230, 81, 0, 0.03) 100%);
+    border-bottom: 1px solid rgba(46, 125, 50, 0.05);
+}
+
+.heroBadge {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    background: white;
+    color: var(--primary-green);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(46, 125, 50, 0.08);
 }
 
 .aboutHero h1 {
-    font-size: 3.5rem;
-    color: var(--foreground);
-    margin-bottom: 1.5rem;
+    font-size: 3.2rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(to right, var(--primary-green) 20%, var(--primary-orange) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.2rem;
 }
 
 .aboutHero p {
     font-size: 1.2rem;
     color: var(--text-muted);
-    max-width: 700px;
+    max-width: 680px;
     margin: 0 auto;
+    line-height: 1.7;
 }
 
 .missionGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 5rem;
+    gap: 4rem;
     align-items: center;
-    padding: 5rem 0;
+    padding: 2.5rem 0;
 }
 
 .badge {
     display: inline-block;
-    padding: 0.5rem 1rem;
-    background: rgba(46, 125, 50, 0.1);
+    padding: 0.4rem 0.8rem;
+    background: rgba(46, 125, 50, 0.08);
     color: var(--primary-green);
     border-radius: 999px;
     font-weight: 700;
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
     text-transform: uppercase;
 }
 
 .missionText h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
 }
 
 .missionText p {
     color: var(--text-muted);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
 }
 
 .points {
     display: grid;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
 }
 
 .point {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
     font-weight: 600;
     color: var(--foreground);
 }
@@ -85,15 +106,15 @@
 
 .infraBg {
     background-color: #fcfdfc;
-    padding: 8rem 0;
-    margin-top: 5rem;
+    padding: 4rem 0;
+    margin-top: 3rem;
     border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 }
 
 .sectionHeader {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
 }
 
 .sectionHeader h2 {
@@ -149,16 +170,159 @@
 }
 
 @media (max-width: 968px) {
+    .aboutHero {
+        padding: 2rem 0 1rem;
+    }
+    
+    .aboutHero h1 {
+        font-size: 2.2rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .aboutHero p {
+        font-size: 1rem;
+    }
+
     .missionGrid {
         grid-template-columns: 1fr;
-        gap: 3rem;
+        gap: 2.5rem;
+        padding: 1.5rem 0;
+    }
+    
+    .processSection {
+        padding: 2.5rem 0;
+    }
+    
+    .processGrid {
+        margin-top: 1.5rem;
+    }
+
+    .infraBg {
+        padding: 3rem 0;
+        margin-top: 2rem;
+    }
+
+    .sectionHeader {
+        margin-bottom: 2rem;
+    }
+
+    .sectionHeader h2 {
+        font-size: 2rem;
     }
     
     .infraGrid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
-    
-    .aboutHero h1 {
-        font-size: 2.5rem;
+}
+
+.processSection {
+    padding: 4rem 0;
+    background: white;
+}
+
+.processGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    position: relative;
+}
+
+.processCard {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: var(--transition-smooth);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.processCard:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(46, 125, 50, 0.2);
+}
+
+.processImageWrapper {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.processImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.processCard:hover .processImage {
+    transform: scale(1.08);
+}
+
+.stepNumber {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 2.8rem;
+    height: 2.8rem;
+    background: var(--primary-green);
+    color: white;
+    font-size: 1.15rem;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    z-index: 2;
+}
+
+.processContent {
+    padding: 2.2rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.processIcon {
+    width: 44px;
+    height: 44px;
+    background: rgba(46, 125, 50, 0.08);
+    color: var(--primary-green);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+}
+
+.processCard h3 {
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.processCard p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+    .processGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .processGrid {
+        grid-template-columns: 1fr;
+        gap: 3.5rem;
     }
 }
