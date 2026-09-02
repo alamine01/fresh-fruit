@@ -28,8 +28,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Ctrl + Shift + F (F pour Fresh Fruit)
-            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'f') {
+            // Ctrl + Shift + F ou Cmd + Shift + F (F pour Fresh Fruit)
+            const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+            const isFKey = e.key?.toLowerCase() === 'f' || e.code === 'KeyF';
+            if (isCtrlOrCmd && e.shiftKey && isFKey) {
                 e.preventDefault();
                 router.push("/admin");
             }
