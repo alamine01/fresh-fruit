@@ -28,8 +28,16 @@ function LoginContent() {
     });
 
     const handleRedirect = (currentUser: any) => {
-        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "contact@fresh-fruit.sn";
-        if (currentUser && currentUser.email === adminEmail) {
+        const knownAdmins = [
+            process.env.NEXT_PUBLIC_ADMIN_EMAIL?.toLowerCase(),
+            "bahmouhamedalamine@gmail.com",
+            "contact@fresh-fruit.sn"
+        ].filter(Boolean);
+
+        const userEmail = currentUser?.email?.toLowerCase();
+        const isDirectAdmin = userEmail && knownAdmins.includes(userEmail);
+
+        if (isDirectAdmin) {
             router.push('/admin');
         } else {
             router.push('/' + redirectPath);

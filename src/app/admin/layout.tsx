@@ -69,8 +69,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             if (!user) {
                 router.push("/account/login");
             } else {
-                const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "contact@fresh-fruit.sn";
-                if (user.email === adminEmail) {
+                const knownAdmins = [
+                    process.env.NEXT_PUBLIC_ADMIN_EMAIL?.toLowerCase(),
+                    "bahmouhamedalamine@gmail.com",
+                    "contact@fresh-fruit.sn"
+                ].filter(Boolean);
+
+                const userEmail = user.email?.toLowerCase();
+                const isDirectAdmin = userEmail && knownAdmins.includes(userEmail);
+
+                if (isDirectAdmin) {
                     setIsAdmin(true);
                 } else {
                     const checkAdminRole = async () => {
