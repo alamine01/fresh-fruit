@@ -46,7 +46,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f8f9fa', textAlign: 'center', padding: '2rem' }}>
                 <Wrench size={64} color="var(--primary-orange)" style={{ marginBottom: '2rem' }} />
                 <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: '#1a1a1a', fontWeight: 800 }}>Site en maintenance</h1>
-                <p style={{ fontSize: '1.1rem', color: '#666', maxWidth: '600px', lineHeight: '1.6' }}>Nous améliorons actuellement notre plateforme pour mieux vous servir. <br/> Fresh Fruit sera de retour très bientôt avec des fruits encore plus frais ! 🍊</p>
+                <p style={{ fontSize: '1.1rem', color: '#666', maxWidth: '600px', lineHeight: '1.6' }}>Nous améliorons actuellement notre plateforme pour mieux vous servir. <br/> Fresh Fruit sera de retour très bientôt avec des fruits encore plus frais !</p>
             </div>
         );
     }

@@ -180,7 +180,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-top: 6px solid #2E7D32;">
                             <div style="padding: 35px 25px; text-align: center;">
                                 <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #E65100; margin-bottom: 12px;">
-                                    🔒 Sécurité Administrateur
+                                    Sécurité Administrateur
                                 </div>
                                 <h1 style="font-size: 20px; font-weight: 800; color: #1e293b; margin: 0 0 16px 0; line-height: 1.2;">
                                     Code de double authentification
@@ -210,7 +210,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         to: user.email,
-                        subject: "🔒 Code de double authentification - Admin Fresh Fruit",
+                        subject: "Code de double authentification - Admin Fresh Fruit",
                         htmlContent: htmlContent
                     })
                 });
@@ -655,20 +655,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             sessionStorage.removeItem("admin_2fa_verified");
                             router.push("/");
                         }}
-                        className={styles.navLink}
-                        style={{
-                            width: '100%',
-                            background: 'none',
-                            border: 'none',
-                            textAlign: 'left',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            color: 'inherit',
-                            fontFamily: 'inherit',
-                            fontSize: 'inherit'
-                        }}
+                        className={`${styles.navLink} ${styles.logoutBtn}`}
                     >
                         <LogOut size={20} />
                         <span>Quitter l'admin</span>

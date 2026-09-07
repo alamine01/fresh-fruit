@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
+import { Package, CheckCircle2 } from "lucide-react";
 import styles from "../Checkout.module.css";
 
 function SuccessContent() {
@@ -48,7 +49,9 @@ function SuccessContent() {
 
     return (
         <div className={`container ${styles.empty}`}>
-            <span style={{ fontSize: '4rem' }}>{isCod ? "📦" : "🎉"}</span>
+            <div style={{ color: 'var(--primary-green)', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+                {isCod ? <Package size={64} /> : <CheckCircle2 size={64} />}
+            </div>
             <h1>Merci pour votre commande !</h1>
             
             {orderNumber && (

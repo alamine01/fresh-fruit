@@ -68,13 +68,13 @@ export async function sendAdminOrderAlert(order: any) {
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
             <div style="background-color: #2E7D32; padding: 20px; text-align: center;">
-                <h1 style="color: white; margin: 0;">Nouvelle Commande ! 🍊</h1>
+                <h1 style="color: white; margin: 0;">Nouvelle Commande !</h1>
             </div>
             <div style="padding: 20px;">
                 <p>Bonjour,</p>
                 <p>Vous avez reçu une nouvelle commande sur <strong>Fresh Fruit</strong>.</p>
                 
-                <h3 style="color: #2E7D32;">📦 Détails de la livraison</h3>
+                <h3 style="color: #2E7D32;">Détails de la livraison</h3>
                 <p>
                     <strong>Client :</strong> ${order.customer.firstName} ${order.customer.lastName}<br>
                     <strong>Téléphone :</strong> ${order.customer.phone}<br>
@@ -82,7 +82,7 @@ export async function sendAdminOrderAlert(order: any) {
                     <strong>Adresse :</strong> ${order.customer.address || 'Non précisée'}
                 </p>
 
-                <h3 style="color: #2E7D32;">🛒 Panier</h3>
+                <h3 style="color: #2E7D32;">Panier</h3>
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background-color: #f9f9f9;">
@@ -123,7 +123,7 @@ export async function sendAdminOrderAlert(order: any) {
             body: JSON.stringify({
                 sender: { name: "Fresh Fruit", email: process.env.SENDER_EMAIL || "bahlamine2004zahra@gmail.com" },
                 to: recipients,
-                subject: `🚀 Nouvelle commande de ${order.customer.firstName} (${order.total.toLocaleString()} CFA)`,
+                subject: `Nouvelle commande de ${order.customer.firstName} (${order.total.toLocaleString()} CFA)`,
                 htmlContent: htmlContent
             })
         });

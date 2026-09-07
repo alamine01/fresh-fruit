@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { ShoppingBag } from "lucide-react";
 import styles from "../Checkout.module.css";
 
 export default function CancelPage() {
     return (
         <div className={`container ${styles.empty}`}>
-            <span style={{ fontSize: '4rem' }}>🛒</span>
+            <div style={{ color: '#ef4444', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+                <ShoppingBag size={64} />
+            </div>
             <h1>Commande annulée</h1>
             <p>Votre paiement n'a pas été finalisé. Vos articles sont toujours dans votre panier.</p>
             <div className={styles.actionButtons}>

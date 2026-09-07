@@ -89,7 +89,7 @@ export default function ContactPage() {
                         <div style="height: 6px; background-color: #2E7D32;"></div>
                         <div style="padding: 30px 24px;">
                             <div style="margin-bottom: 20px;">
-                                <span style="font-size: 11px; font-weight: 800; color: #E65100; text-transform: uppercase; letter-spacing: 1.5px;">🍊 Fresh Fruit Admin</span>
+                                <span style="font-size: 11px; font-weight: 800; color: #E65100; text-transform: uppercase; letter-spacing: 1.5px;">Fresh Fruit Admin</span>
                             </div>
                             
                             <h1 style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; letter-spacing: -0.02em; line-height: 1.3;">Nouveau message de contact</h1>
@@ -145,7 +145,7 @@ export default function ContactPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     to: adminEmail,
-                    subject: `✉️ Nouveau message de contact : ${subject} (${name})`,
+                    subject: `Nouveau message de contact : ${subject} (${name})`,
                     htmlContent: htmlContent
                 })
             });

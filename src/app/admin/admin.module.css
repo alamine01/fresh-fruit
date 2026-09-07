@@ -24,7 +24,7 @@
   width: 280px;
   background-color: #1a1a1a;
   color: white;
-  padding: 2rem;
+  padding: 2rem 1.25rem;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -32,7 +32,8 @@
   left: 0;
   top: 0;
   z-index: 100;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .bottomNav {
@@ -74,7 +75,22 @@
   margin-bottom: 3rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  white-space: nowrap;
+  transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), gap 0.3s cubic-bezier(0.4, 0, 0.2, 1), justify-content 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo svg {
+  flex-shrink: 0;
+}
+
+.logo span {
+  white-space: nowrap;
+  opacity: 1;
+  max-width: 200px;
+  display: inline-block;
+  overflow: hidden;
+  transition: opacity 0.2s ease, max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.2s ease;
 }
 
 .nav {
@@ -87,11 +103,37 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0.9rem 1rem;
   border-radius: 12px;
   color: #a0a0a0;
   font-weight: 500;
-  transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease, padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), gap 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navLink svg {
+  flex-shrink: 0;
+}
+
+.navLink span {
+  white-space: nowrap;
+  opacity: 1;
+  max-width: 200px;
+  display: inline-block;
+  overflow: hidden;
+  transition: opacity 0.2s ease, max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.2s ease;
+}
+
+.logoutBtn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
 }
 
 .navLink:hover {
@@ -109,7 +151,7 @@
   margin-left: 280px;
   padding: 3rem 5%;
   width: calc(100% - 280px);
-  transition: all 0.4s ease;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 1200px) {
@@ -126,21 +168,25 @@
   .sidebar {
     width: 80px;
     padding: 2rem 0.5rem;
-    align-items: center;
   }
   
   .logo span, .navLink span {
-    display: none;
+    opacity: 0;
+    max-width: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
   
   .logo {
     justify-content: center;
     margin-bottom: 2rem;
+    gap: 0;
   }
 
   .navLink {
     justify-content: center;
-    padding: 1.2rem;
+    padding: 0.9rem 0.5rem;
+    gap: 0;
   }
   
   .mainContent {
@@ -299,22 +345,27 @@
   .sidebarCollapsed {
     width: 80px;
     padding: 2rem 0.5rem;
-    align-items: center;
   }
   
   .sidebarCollapsed .logo span, 
   .sidebarCollapsed .navLink span {
-    display: none;
+    opacity: 0;
+    max-width: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s ease;
   }
   
   .sidebarCollapsed .logo {
     justify-content: center;
     margin-bottom: 2rem;
+    gap: 0;
   }
 
   .sidebarCollapsed .navLink {
     justify-content: center;
-    padding: 1.2rem;
+    padding: 0.9rem 0.5rem;
+    gap: 0;
   }
   
   .mainContentCollapsed {
