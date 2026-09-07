@@ -17,8 +17,7 @@ import {
     ShieldAlert,
     KeyRound,
     Send,
-    ChevronLeft,
-    ChevronRight
+    ChevronLeft
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
@@ -624,7 +623,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     className={styles.toggleBtn}
                     title={isSidebarCollapsed ? "Agrandir le menu" : "Réduire le menu"}
                 >
-                    {isSidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+                    <ChevronLeft 
+                        size={16} 
+                        className={`${styles.toggleIcon} ${isSidebarCollapsed ? styles.toggleIconCollapsed : ""}`} 
+                    />
                 </button>
 
                 <div className={styles.logo}>
