@@ -63,10 +63,10 @@
 
 @media (max-width: 768px) {
     .logoImg {
-        height: 80px;
+        height: 115px;
     }
     .headerScrolled .logoImg {
-        height: 50px;
+        height: 68px;
     }
 }
 

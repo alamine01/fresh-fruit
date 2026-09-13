@@ -159,6 +159,10 @@
         text-align: center;
     }
 
+    .logoImg {
+        height: 140px;
+    }
+
     .social {
         justify-content: center;
     }
