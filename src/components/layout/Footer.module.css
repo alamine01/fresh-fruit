@@ -245,9 +245,10 @@
     border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 1.5rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
     width: 320px;
-    z-index: 10;
+    max-width: calc(100vw - 32px);
+    z-index: 50;
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
@@ -310,8 +311,10 @@
 
 @media (max-width: 768px) {
     .dropdownMenu {
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
         bottom: 100%;
     }
     .dropdownTrigger {
