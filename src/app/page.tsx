@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Hero from "@/components/home/Hero";
+import VideoScrollytelling from "@/components/home/VideoScrollytelling";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { Apple, ShoppingBasket, Leaf, ArrowRight, CupSoda, Heart, Zap, Users } from "lucide-react";
@@ -105,36 +106,8 @@ export default function Home() {
     <div className={styles.page}>
       <Hero />
 
-      {/* Vidéo Publicitaire */}
-      <section className={styles.videoSection}>
-        <div className="container">
-          <motion.div 
-            className={styles.videoWrapper}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <video 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              preload="metadata"
-              className={styles.homeVideo}
-              poster="/hero-fruit.jpg"
-            >
-              <source src="https://firebasestorage.googleapis.com/v0/b/fresh-fruit-3f64d.firebasestorage.app/o/fresh%20fruit.mp4?alt=media&token=35536189-830c-4e80-a92a-8e606f7d7a95" type="video/mp4" />
-            </video>
-            <div className={styles.videoOverlay}>
-              <div className={styles.videoText}>
-                <h3>De l'arbre à votre table</h3>
-                <p>Découvrez la fraîcheur absolue sélectionnée par Fresh Fruit.</p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* Séquence Vidéo Scrollytelling */}
+      <VideoScrollytelling />
 
       {/* Mission Impact Local */}
       <section className={styles.impactSection}>
